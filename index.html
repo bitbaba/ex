@@ -13,19 +13,19 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
-<body>  
-  <div class="input-group">
-    <span class="input-group-addon">bitgold://</span>
-    <input id='qval' type="text" class="form-control" placeholder="blockno/blockhash/txid/address">
-    <span class="input-group-btn">
-      <button id='query' class="btn btn-default" type="button">Go!</button>
-    </span>
-  </div>  
-  <div class="panel panel-default">
-    <div class="panel-heading">result</div>
-    <div class="panel-body">
-      <div id="jsonviewer"></div>
-    </div>
+<body>
+  
+  <ul class="list-group">
+    <li class="list-group-item list-group-item-success">Dapibus ac facilisis in</li>
+    <li class="list-group-item list-group-item-info">Cras sit amet nibh libero</li>
+    <li class="list-group-item list-group-item-warning">Porta ac consectetur ac</li>
+    <li class="list-group-item list-group-item-danger">Vestibulum at eros</li>
+  </ul>
+  <div class="list-group">
+    <a href="#" class="list-group-item list-group-item-success">Dapibus ac facilisis in</a>
+    <a href="#" class="list-group-item list-group-item-info">Cras sit amet nibh libero</a>
+    <a href="#" class="list-group-item list-group-item-warning">Porta ac consectetur ac</a>
+    <a href="#" class="list-group-item list-group-item-danger">Vestibulum at eros</a>
   </div>
   
   <!--=================================================================-->
@@ -37,58 +37,6 @@
           },
           function (data){$("#jsonviewer").JSONView(data);}
         ); 
-    }
-    function getblock(blockhash){
-        $.get("https://bitgold.bitbaba.com/api.php",{
-             method: "getblock",
-             params: '"' + blockhash + '",1'
-          },
-          function (data){$("#jsonviewer").JSONView(data);}
-        ); 
-    }
-    
-    function gettx(txid){
-        $.get("https://bitgold.bitbaba.com/api.php",{
-             method: "getrawtransaction",
-             params: '"' + txid + '",true'
-          },
-          function (data){$("#jsonviewer").JSONView(data);}
-        ); 
-    }
-    
-    function getaddrinfo(addr){
-        $.get("https://bitgold.bitbaba.com/api.php",{
-             method: "validateaddress",
-             params: '"' + addr + '"'
-          },
-          function (data){$("#jsonviewer").JSONView(data);}
-        ); 
-    }
-
-    $("#query").click(function(){doQuery();});
-    
-    $('#qval').keypress(function(e){
-      if(e.which == 13) {doQuery();}
-    })
-    
-    $("#qval").click(function(){
-        $("#qval").val("");
-    });
-    
-    function doQuery(){
-        var qval = $("#qval").val() || "0000018d2d31e4ed7df7b699d32cc1f4da1ba6e3e6f49a2b33b9ff43ffa630e0";
-        if (qval.indexOf('0x') == 0 || qval.indexOf('0X') == 0){
-            qval = qval.substr(2);
-        }else{
-            getblockhash(qval);
-        }
-        if (qval.length == 64){
-          if (qval.indexOf("00000") == 0) getblock(qval);
-          else gettx(qval);
-        }else if (qval.indexOf('G') == 0 || qval.indexOf('3') == 0){
-          getaddrinfo(qval);
-        }else{    
-        }
     }
   </script>  
 </body>
