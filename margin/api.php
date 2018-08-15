@@ -78,18 +78,34 @@ function TokenCheck(){
 }
 
 function dispatch(){
-    if (!TokenCheck()){ 
-        return "auth failed";
-    }
-    
+	if (!TokenCheck()){ 
+		return "auth failed";
+	}
+
 	$api=GetParam("api");
-	if ($api == 'get_orders'){
-	    return list_orderbooks();
+	if ($api == 'list_orderbooks'){
+		return list_orderbooks();
+	} else if ($api == 'list_depth'){
+		return list_depth(GetParam('symbol')); 
+	} else if ($api == 'list_orders'){
+		return list_orders(GetParam('symbol'), GetParam('begin'), GetParam('limit'));
+	} else if ($api == 'revoke_order'){
+		return revoke_order(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));
+	} else if ($api == 'place_order'){
+		return place_order(GetParam('account_id'), GetParam('symbol'), GetParam('buy'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'buyy'){
+		return buyy(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'sell'){
+		return sell(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'get_balance'){
+		return get_balance(GetParam('account_id'));
 	} else if ($api == 'get_marketinfo'){
-	   return get_marketinfo(GetParam('symbol')); 
-	} else{
-        return "undefined api";
-    }
+		return get_marketinfo(GetParam('symbol'));
+	} else if ($api == 'get_trades'){
+		return get_trades(GetParam('symbol'), GetParam('begin'), GetParam('limit'));
+	} else {
+		return "undefined api";
+	}
 }
 
 echo dispatch();
