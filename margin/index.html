@@ -14,34 +14,28 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-<!--====================================================-->
-    <div class="row-sm-6">
-      <div class='panel panel-default'>
-        <div class='panel-heading'>Chart Title</div>
-        <div class='panel-body'>
-          Chart body
-        </div>
-      </div>
+    <div class="row-sm-6" id="orderbooks">
     </div>
-<!--====================================================-->  
-    <div class="row-sm-6">
-      <div class='col'></div>
-      <div class='col'>
-        <div class='row-sm-6'></div>
-        <div class='row-sm-6'></div>        
-      </div>      
-    </div>
-  
+    <div class="row-sm-6" id="balance">
+    </div> 
+    <div class="row-sm-6" id="marketinfo">
+    </div> 
+    <div class="row-sm-6" id="trades">
+    </div>   
+    <div class="row-sm-6" id="orders">
+    </div>     
+    <div class="row-sm-6" id="depth">
+    </div>       
 <!--=================================================================-->
   <script type="text/javascript">
-    function getblockhash(blockno){
-        $.get("https://bitgold.bitbaba.com/api.php",{
-             method: "getblockhash",
-             params: '' + blockno + ''
+    (function list_orderbooks(){
+        $.get("https://ex.bitbaba.com/margin/api.php",{
+             api: "list_orderbooks",
+             token: "secure",
           },
-          function (data){$("#jsonviewer").JSONView(data);}
+          function (data){$("#orderbooks").JSONView(data);}
         ); 
-    }
+    })();    
   </script>  
 </body>
 </html>
