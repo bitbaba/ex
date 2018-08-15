@@ -28,14 +28,18 @@
     </div>       
 <!--=================================================================-->
   <script type="text/javascript">
-    (function list_orderbooks(){
+    function list_orderbooks(){
         $.get("https://ex.bitbaba.com/margin/api.php",{
              api: "list_orderbooks",
              token: "secure",
           },
           function (data){$("#orderbooks").JSONView(data);}
         ); 
-    })();    
+    };    
   </script>  
+  <a href="list_orderbooks();">list_orderbooks</a><br>
+  <a href="list_orderbooks();">list_orderbooks</a><br>
+  <a href="list_orderbooks();">list_orderbooks</a><br>
+  <a href="list_orderbooks();">list_orderbooks</a><br>
 </body>
 </html>
