@@ -69,7 +69,7 @@ function get_trades($symbol, $begin, $limit){
 }
 
 function GetParam($name){
-	if (isset($_GET) && isset($_GET[$name]) && !empty($_GET[$name])) 
+	if (isset($_GET) && isset($_GET[$name])) 
         return $_GET[$name];
 }
 
@@ -88,11 +88,9 @@ function dispatch(){
 	} else if ($api == 'list_depth'){
 		return list_depth(GetParam('symbol')); 
 	} else if ($api == 'list_orders'){
-		return list_orders(GetParam('symbol'), GetParam('begin'), GetParam('limit'));
+		return list_orders(GetParam('account_id'));
 	} else if ($api == 'revoke_order'){
 		return revoke_order(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));
-	} else if ($api == 'place_order'){
-		return place_order(GetParam('account_id'), GetParam('symbol'), GetParam('buy'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
 	} else if ($api == 'buyy'){
 		return buyy(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
 	} else if ($api == 'sell'){

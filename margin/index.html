@@ -26,20 +26,46 @@
     </div>     
     <div class="row-sm-6" id="depth">
     </div>       
+    <div class="row-sm-6" id="buyy">
+    </div>       
+    <div class="row-sm-6" id="sell">
+    </div>       
 <!--=================================================================-->
   <script type="text/javascript">
+    function list_orders(){
+        $.get("https://ex.bitbaba.com/margin/api.php",{
+             api: "list_orders",
+             account_id: 1,
+             token: "secure"
+          },
+          function (data){$("#orders").JSONView(data);}
+        ); 
+    }; 
     function list_orderbooks(){
         $.get("https://ex.bitbaba.com/margin/api.php",{
              api: "list_orderbooks",
-             token: "secure",
+             token: "secure"
           },
           function (data){$("#orderbooks").JSONView(data);}
         ); 
     };    
+    function buyy(){
+        $.get("https://ex.bitbaba.com/margin/api.php",{
+             api: "buyy",
+             token: "secure",
+             account_id: 1,
+             symbol: "BGD/USDT",
+             price: "100.00100",
+             qty: "20.00100",
+             leverage: "2.0",
+             ref_contract_id: 0,
+          },
+          function (data){$("#buyy").JSONView(data);}
+        ); 
+    };    
   </script>  
-  <a href="list_orderbooks();">list_orderbooks</a><br>
-  <a href="list_orderbooks();">list_orderbooks</a><br>
-  <a href="list_orderbooks();">list_orderbooks</a><br>
-  <a href="list_orderbooks();">list_orderbooks</a><br>
+  <a href="javascript:list_orderbooks();">list_orderbooks</a><br>
+  <a href="javascript:buyy();">buyy</a><br>
+  <a href="javascript:list_orders();">list_orders</a><br>
 </body>
 </html>
