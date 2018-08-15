@@ -83,6 +83,15 @@
           function (data){$("#buyy").JSONView(data);}
         ); 
     };     
+    function get_balance(){
+        $.get("https://ex.bitbaba.com/margin/api.php",{
+             api: "get_balance",
+             token: "secure",
+             account_id: 1
+          },
+          function (data){$("#balance").JSONView(data);}
+        ); 
+    };   
   </script>  
 </body>
 </html>
