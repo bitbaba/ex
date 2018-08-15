@@ -69,8 +69,8 @@ function get_trades($symbol, $begin, $limit){
 }
 
 function GetParam($name){
-	if (isset($_GET) && isset($_GET[$name])) 
-        return $_GET[$name];
+	if (isset($_REQUEST[$name])) 
+        return $_REQUEST[$name];
 }
 
 function TokenCheck(){
