@@ -16,162 +16,17 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
- <ul class="list-group">
-    <li class="list-group-item"><a href="javascript:list_orderbooks();">list_orderbooks</a></li>
-    <li class="list-group-item"><a href="javascript:buyy();">buyy</a></li>
-    <li class="list-group-item"><a href="javascript:sell();">sell</a></li>
-    <li class="list-group-item"><a href="javascript:list_orders();">list_orders</a></li>
-    <li class="list-group-item">
-      <label class="sr-only" for="account_id">账户</label> <input type="text" class="form-control" name="account_id" placeholder="账户">
-      <a href="javascript:get_balance();">get_balance</a>
-   </li>
-  </ul>
-    <div class="row-sm-6" id="orderbooks">
-    </div>
-    <div class="row-sm-6" id="balance">
-    </div> 
-    <div class="row-sm-6" id="marketinfo">
-    </div> 
-    <div class="row-sm-6" id="trades">
-    </div>   
-    <div class="row-sm-6" id="orders">
-    </div>     
-    <div class="row-sm-6" id="depth">
-    </div>       
-    <div class="row-sm-6" id="buyy">
-    </div>       
-    <div class="row-sm-6" id="sell">
-    </div>       
-<table id="myTable" class="display">
-    <thead>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<table id="example" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn.</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </tfoot>
-    </table>
-<!--=================================================================-->
-  <script type="text/javascript">
-    $(document).ready( function () { 
-    
-      // For Balance
-      $('#example').DataTable( {
-        "ajax": '/margin/api.php?token=secure&api=get_balance&account_id=1'
-      });
-      // For Test
-      $('#myTable').DataTable({
-    "data": [
-        {
-            "name":       "Tiger Nixon",
-            "position":   "System Architect",
-            "salary":     "$3,120",
-            "start_date": "2011/04/25",
-            "office":     "Edinburgh",
-            "extn":       5421
-        },
-        {
-            "name": "Garrett Winters",
-            "position": "Director",
-            "salary": "5300",
-            "start_date": "2011/07/25",
-            "office": "Edinburgh",
-            "extn": "8422"
-        }
-    ],
-    "columns": [
-        { "data": "name" },
-        { "data": "position" },
-        { "data": "office" },
-        { "data": "extn" },
-        { "data": "start_date" },
-        { "data": "salary" }
-    ]
-    })}); 
-    function list_orders(){
-        $.get("https://ex.bitbaba.com/margin/api.php",{
-             api: "list_orders",
-             account_id: 1,
-             token: "secure"
-          },
-          function (data){$("#orders").JSONView(data);}
-        ); 
-    }; 
-    function get_trades(){
-        $.get("https://ex.bitbaba.com/margin/api.php",{
-             api: "get_trades",
-             symbol: "BGD/USDT",
-             begin: 0,
-             limit: 100,
-             token: "secure"
-          },
-          function (data){$("#trades").JSONView(data);}
-        ); 
-    };    
-    function list_orderbooks(){
-        $.get("https://ex.bitbaba.com/margin/api.php",{
-             api: "list_orderbooks",
-             token: "secure"
-          },
-          function (data){$("#orderbooks").JSONView(data);}
-        ); 
-    };    
-    function buyy(){
-        $.post("https://ex.bitbaba.com/margin/api.php",{
-             api: "buyy",
-             token: "secure",
-             account_id: 1,
-             symbol: "BGD/USDT",
-             price: "100.00100",
-             qty: "1.00100",
-             leverage: "2.0",
-             ref_contract_id: 0,
-          },
-          function (data){$("#buyy").JSONView(data);}
-        ); 
-    };   
-    function sell(){
-        $.get("https://ex.bitbaba.com/margin/api.php",{
-             api: "sell",
-             token: "secure",
-             account_id: 2,
-             symbol: "BGD/USDT",
-             price: "100.00100",
-             qty: "20.00100",
-             leverage: "2.0",
-             ref_contract_id: 0,
-          },
-          function (data){$("#buyy").JSONView(data);}
-        ); 
-    };     
-    function get_balance(){
-        $.get("https://ex.bitbaba.com/margin/api.php",{
-             api: "get_balance",
-             token: "secure",
-             account_id: 1
-          },
-          function (data){$("#balance").JSONView(data);}
-        ); 
-    };   
-  </script>  
+<div class="container">
+  <div class="row"><div class="col-sm"><iframe src='orderbook.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='depth.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='deposit.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='withdrawal.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='balance.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='order.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='contract.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='trade.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='buyy.html'></iframe></div></div>
+  <div class="row"><div class="col-sm"><iframe src='sell.html'></iframe></div></div>
+</div>
 </body>
 </html>
