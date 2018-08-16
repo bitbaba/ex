@@ -20,19 +20,19 @@
 </head>
 
 <body>
-<table id="depth" class="display" style="width:100%">
-        <thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead>
+<table id="contract" class="display" style="width:100%">
+        <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
 </table>
 <script type="text/javascript">
 $(document).ready( function () { 
-        var table=$('#depth').DataTable( {
+        var table=$('#contract').DataTable( {
                 "ajax": {
                             'url': '/margin/api.php',
                             'type': 'POST',
                             'data': function(d){
-                                        d.symbol=$.urlparam('symbol')!=null?$.urlparam('symbol'):'BTC/USDT';
+                                        d.account_id=$.urlparam('account_id')!=null?$.urlparam('account_id'):'1';
                                         d.token="secure";
-                                        d.api='list_depth';
+                                        d.api='list_contracts';
                                     }
                         }
         });

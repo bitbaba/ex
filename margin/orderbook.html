@@ -20,19 +20,19 @@
 </head>
 
 <body>
-<table id="depth" class="display" style="width:100%">
-        <thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead>
+<table id="orderbook" class="display" style="width:100%">
+        <thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead>
 </table>
 <script type="text/javascript">
 $(document).ready( function () { 
-        var table=$('#depth').DataTable( {
+        var table=$('#orderbook').DataTable( {
                 "ajax": {
                             'url': '/margin/api.php',
                             'type': 'POST',
                             'data': function(d){
-                                        d.symbol=$.urlparam('symbol')!=null?$.urlparam('symbol'):'BTC/USDT';
+                                        //d.symbol=$.urlparam('symbol')!=null?$.urlparam('symbol'):'BTC/USDT';
                                         d.token="secure";
-                                        d.api='list_depth';
+                                        d.api='list_orderbooks';
                                     }
                         }
         });

@@ -35,6 +35,10 @@ function list_depth($symbol){
 		, '["'.$symbol.'"]');
 }
 
+function list_contracts($account_id){
+	return req("list_contracts", '['.$account_id.']');
+}
+
 function list_orders($account_id){
 	return req("list_orders", '['.$account_id.']');
 }
@@ -87,6 +91,8 @@ function dispatch(){
 		return list_orderbooks();
 	} else if ($api == 'list_depth'){
 		return list_depth(GetParam('symbol')); 
+	} else if ($api == 'list_contracts'){
+		return list_contracts(GetParam('account_id'));
 	} else if ($api == 'list_orders'){
 		return list_orders(GetParam('account_id'));
 	} else if ($api == 'revoke_order'){

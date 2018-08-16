@@ -20,19 +20,24 @@
 </head>
 
 <body>
-<table id="depth" class="display" style="width:100%">
-        <thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead>
+<table id="order" class="display" style="width:100%">
+        <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
 </table>
 <script type="text/javascript">
 $(document).ready( function () { 
-        var table=$('#depth').DataTable( {
+        var table=$('#order').DataTable( {
                 "ajax": {
                             'url': '/margin/api.php',
                             'type': 'POST',
                             'data': function(d){
-                                        d.symbol=$.urlparam('symbol')!=null?$.urlparam('symbol'):'BTC/USDT';
+                                        if($.urlparam('account_id')!=null) d.account_id=$.urlparam('account_id');
+                                        if($.urlparam('symbol')!=null) d.symbol=$.urlparam('symbol');
+                                        if($.urlparam('price')!=null) d.price=$.urlparam('price');
+                                        if($.urlparam('qty')!=null) d.qty=$.urlparam('qty');
+                                        if($.urlparam('leverage')!=null) d.leverage=$.urlparam('leverage');
+                                        if($.urlparam('ref_contract_id')!=null) d.ref_contract_id=$.urlparam('ref_contract_id');
                                         d.token="secure";
-                                        d.api='list_depth';
+                                        d.api='buyy';
                                     }
                         }
         });
