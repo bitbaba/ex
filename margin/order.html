@@ -21,7 +21,7 @@
 
 <body>
 <table id="order" class="display" style="width:100%">
-        <thead> <tr> <th>AccountId</th> <th>Coin</th> <th>Balance</th> <th>Freezed</th> <th>Loan</th> <th>CoinAddress</th> </tr> </thead>
+        <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
 </table>
 <script type="text/javascript">
 $(document).ready( function () { 
@@ -37,7 +37,7 @@ $(document).ready( function () {
                         }
         });
         setInterval( function () { table.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
-});
+});revokable
 </script>  
 </body>
 </html>
