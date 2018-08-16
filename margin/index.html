@@ -48,9 +48,22 @@
     <tbody>
     </tbody>
 </table>
+<table id="balance" class="display">
+    <thead>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 <!--=================================================================-->
   <script type="text/javascript">
-    $(document).ready( function () { $('#myTable').DataTable({
+    $(document).ready( function () { 
+    
+      // For Balance
+      $('#example').DataTable( {
+        "ajax": '/margin/api.php/token=secure&api=get_balance&account_id=1'
+      });
+      // For Test
+      $('#myTable').DataTable({
     "data": [
         {
             "name":       "Tiger Nixon",
