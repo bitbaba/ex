@@ -20,6 +20,7 @@
     <a href="javascript:sell();">sell</a><br>
     <a href="javascript:list_orders();">list_orders</a><br>
     <a href="javascript:get_balance();">get_balance</a><br>
+    <a href="javascript:get_trades();">get_trades</a><br>
   </div>
     <div class="row-sm-6" id="orderbooks">
     </div>
@@ -48,6 +49,17 @@
           function (data){$("#orders").JSONView(data);}
         ); 
     }; 
+    function get_trades(){
+        $.get("https://ex.bitbaba.com/margin/api.php",{
+             api: "get_trades",
+             symbol: "BGD/USDT",
+             begin: 0,
+             limit: 100,
+             token: "secure"
+          },
+          function (data){$("#trades").JSONView(data);}
+        ); 
+    };    
     function list_orderbooks(){
         $.get("https://ex.bitbaba.com/margin/api.php",{
              api: "list_orderbooks",
