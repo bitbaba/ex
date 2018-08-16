@@ -60,6 +60,12 @@ function sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id){
 	return place_order($account_id, $symbol, 'false', $price, $qty,$leverage,$ref_contract_id);
 }
 
+function deposit($account_id, $coin, $qty){
+	return req("deposit", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
+}
+function withdrawal($account_id, $coin, $qty){
+	return req("withdrawal", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
+}
 function get_balance($account_id){
 	return req("get_balance", '['.$account_id.']');
 }
@@ -101,6 +107,10 @@ function dispatch(){
 		return buyy(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
 	} else if ($api == 'sell'){
 		return sell(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'deposit'){
+		return deposit(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
+	} else if ($api == 'withdrawal'){
+		return withdrawal(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
 	} else if ($api == 'get_balance'){
 		return get_balance(GetParam('account_id'));
 	} else if ($api == 'get_marketinfo'){
