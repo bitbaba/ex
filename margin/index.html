@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <title>exchange</title>
   <link rel="stylesheet" href="/margin/css/jquery.jsonview.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
   <script type="text/javascript" src="/margin/js/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="/margin/js/jquery.jsonview.js"></script>
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -37,8 +39,42 @@
     </div>       
     <div class="row-sm-6" id="sell">
     </div>       
+<table id="myTable" class="display">
+    <thead>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
 <!--=================================================================-->
   <script type="text/javascript">
+    $(document).ready( function () { $('#myTable').DataTable({
+    "data": [
+        {
+            "name":       "Tiger Nixon",
+            "position":   "System Architect",
+            "salary":     "$3,120",
+            "start_date": "2011/04/25",
+            "office":     "Edinburgh",
+            "extn":       5421
+        },
+        {
+            "name": "Garrett Winters",
+            "position": "Director",
+            "salary": "5300",
+            "start_date": "2011/07/25",
+            "office": "Edinburgh",
+            "extn": "8422"
+        }
+    ],
+    "columns": [
+        { "data": "name" },
+        { "data": "position" },
+        { "data": "office" },
+        { "data": "extn" },
+        { "data": "start_date" },
+        { "data": "salary" }
+    ]
+    })}); 
     function list_orders(){
         $.get("https://ex.bitbaba.com/margin/api.php",{
              api: "list_orders",
