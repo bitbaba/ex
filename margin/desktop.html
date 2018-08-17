@@ -104,6 +104,9 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
+        <table id="orders" class="display" style="width:100%">
+            <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
+        </table>
 		</div>
 	</div>    
 	<div class="row">
@@ -142,6 +145,12 @@ var balances=$('#balances').DataTable( { "ajax": { 'url': '/margin/api.php', 'ty
             d.account_id='1';
             }}});
 setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var orders=$('#orders').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='get_balance';
+            d.account_id='1';
+            }}});
+setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 
 });
