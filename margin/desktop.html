@@ -118,6 +118,9 @@
 	</div>    
 	<div class="row">
 		<div class="col-md-12">
+        <table id="trades" class="display" style="width:100%">
+            <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead>
+        </table>
 		</div>
 	</div>    
 </div>
@@ -160,6 +163,14 @@ var contracts=$('#contracts').DataTable( { "ajax": { 'url': '/margin/api.php', '
             d.account_id='1';
             }}});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var trades=$('#trades').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='get_trades';
+            d.symbol='BGD/USDT';
+            d.begin='0';
+            d.limit='10';
+            }}});
+setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 
 });
