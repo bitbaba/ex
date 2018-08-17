@@ -87,7 +87,7 @@
 							</label>
 							<input class="form-control" id="BidLeverage"/>
 						</div>                        
-						<button type="submit" class="btn btn-primary">
+						<button type="button" class="btn btn-primary" onclick="javascript:buyy();">
 							Buyy
 						</button>
 					</form>
@@ -181,7 +181,6 @@
 
 
 <script type="text/javascript">
-$(document).ready( function () { 
 /**
 * Global Settings
 */
@@ -201,10 +200,24 @@ if ($.urlparam('market') != null){
 * Modifiers
 */
 function buyy(){
-
+    $.post('/margin/api.php', {
+        api: 'buyy',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        price : "100.20",
+        qty : "2.5",
+        leverage : "2.0",
+        ref_contract_id : "0"
+    }, function(resp){
+        alert(resp); 
+    });
 }
 
 function sell(){
+
+}
+
+function close(){
 
 }
 
@@ -216,53 +229,52 @@ function withdrawal(){
 
 }
 
+$(document).ready( function () { 
 /**
 * Viewers
 */
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='list_orderbooks';
-                
             }}});
 setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var marketinfo=$('#marketinfo').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_marketinfo';
-            d.symbol="BGD/USDT";
+            d.symbol=CURRENT_MARKET;
             }}});
 setInterval( function () { marketinfo.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );            
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_depth';
-            d.symbol="BGD/USDT";
+            d.symbol=CURRENT_MARKET;
             }}});
 setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_balance';
-            d.account_id='1';
+            d.account_id=CURRENT_ACCOUNT;
             }}});
 setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_orders';
-            d.account_id='1';
+            d.account_id=CURRENT_ACCOUNT;
             }}});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_contracts';
-            d.account_id='1';
+            d.account_id=CURRENT_ACCOUNT;
             }}});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var trades=$('#trades').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_trades';
-            d.symbol='BGD/USDT';
+            d.symbol=CURRENT_MARKET;
             d.begin='0';
             d.limit='10';
             }}});
 setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
-
 
 });
 </script>

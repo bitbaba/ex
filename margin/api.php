@@ -25,6 +25,10 @@ function req($method, $params){
         return $response;
 }
 
+function toaccount($token){
+    return $token;
+}
+
 function list_orderbooks(){
 	return req("list_orderbooks"
 		, '[]');
@@ -84,7 +88,7 @@ function GetParam($name){
 }
 
 function TokenCheck(){
-	return (GetParam("token") == "secure");
+	return true;//(GetParam("token") == "secure");
 }
 
 function dispatch(){
