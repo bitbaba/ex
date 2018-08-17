@@ -182,6 +182,33 @@
 
 <script type="text/javascript">
 $(document).ready( function () { 
+/**
+* Global Settings
+*/
+var current_account = "1"; //TODO: should be secret token, API.php will traslate it to account_id;
+var current_market  = "BGD/USDT";
+/**
+* Modifiers
+*/
+function buyy(){
+
+}
+
+function sell(){
+
+}
+
+function deposit(){
+
+}
+
+function withdrawal(){
+
+}
+
+/**
+* Viewers
+*/
 var orderbooks=$('#orderbooks').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='list_orderbooks';
                 
