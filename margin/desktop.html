@@ -111,6 +111,9 @@
 	</div>    
 	<div class="row">
 		<div class="col-md-12">
+        <table id="contracts" class="display" style="width:100%">
+            <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>st</th> <th>bull</th> <th>open_time</th> <th>close_time</th> <th>liqui_time</th><th>owner</th><th>counterpart</th><th>orderId</th><th>matchId</th><th>costValue</th><th>costPrice</th><th>qty</th><th>feerate</th><th>leverage</th><th>matched_open_contract</th><th>close_order_id</th></tr> </thead>
+        </table>
 		</div>
 	</div>    
 	<div class="row">
@@ -151,6 +154,12 @@ var orders=$('#orders').DataTable( { "ajax": { 'url': '/margin/api.php', 'type':
             d.account_id='1';
             }}});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var contracts=$('#contracts').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='list_contracts';
+            d.account_id='1';
+            }}});
+setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 
 });
