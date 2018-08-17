@@ -99,9 +99,61 @@
 		<div class="col-md-12">
         <table id="balances" class="display" style="width:100%">
         <thead>
-            <tr> <th>AccountId</th> <th>Coin</th> <th>Balance</th> <th>Freezed</th> <th>Loan</th> <th>CoinAddress</th> </tr>
+            <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th> <th>loan</th> <th>coin_address</th> </tr>
         </thead>
         </table>
+		</div>
+	</div>
+    <div class="row">
+		<div class="col-md-6">
+			<form role="form">
+				<div class="form-group">					 
+					<label for="WithdrawalCoin">
+						Coin
+					</label>
+					<input class="form-control" id="WithdrawalCoin"/>
+				</div>
+				<div class="form-group">					 
+					<label for="WithdrawalQuantity">
+						Quantity
+					</label>
+					<input class="form-control" id="WithdrawalQuantity"/>
+				</div>
+				<div class="form-group">					 
+					<label for="WithdrawalAddress">
+						Address
+					</label>
+					<input class="form-control" id="WithdrawalAddress"/>
+				</div>                
+				<button type="submit" class="btn btn-primary">
+					Withdrawal
+				</button>
+			</form>
+		</div>
+		<div class="col-md-6">
+			<form role="form">
+				<div class="form-group">					 
+					<label for="DepositCoin">
+						Coin
+					</label>
+					<input class="form-control" id="DepositCoin"/>
+				</div>
+				<div class="form-group">					 
+					<label for="DepositQuantity">
+						Quantity
+					</label>
+					<input class="form-control" id="DepositQuantity"/>
+				</div>
+				<div class="form-group">					 
+					<label for="DepositAddress">
+						Address
+					</label>
+					<input class="form-control" id="DepositAddress"/>
+				</div>                
+				<button type="submit" class="btn btn-primary">
+					Deposit
+				</button>
+			</form>
 		</div>
 	</div>
 	<div class="row">
@@ -173,6 +225,7 @@ var trades=$('#trades').DataTable( { "ajax": { 'url': '/margin/api.php', 'type':
             d.limit='10';
             }}});
 setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+
 
 });
 </script>
