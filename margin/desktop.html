@@ -14,12 +14,15 @@
   <script type="text/javascript" src="/margin/js/jquery.jsonview.js"></script>
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script>
+    (function ($){$.urlparam=function(name){var reg=new RegExp("(^|&)" + name + "=([^&]*)(&|$)");var r=window.location.search.substr(1).match(reg);if(r!=null)return unescape(r[2]);return null;}})(jQuery);
+  </script>
 </head>
 <body>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-12">
-        <table id="orderbook" class="display" style="width:100%"><thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead></table>
+                <table id="orderbooks" class="display" style="width:100%"><thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead></table>
 		</div>
 	</div>
 	<div class="row">
@@ -46,31 +49,18 @@
 				<div class="col-md-12">
 					<form role="form">
 						<div class="form-group">
-							 
 							<label for="exampleInputEmail1">
 								Email address
 							</label>
 							<input class="form-control" id="exampleInputEmail1" type="email" />
 						</div>
 						<div class="form-group">
-							 
 							<label for="exampleInputPassword1">
 								Password
 							</label>
 							<input class="form-control" id="exampleInputPassword1" type="password" />
 						</div>
-						<div class="form-group">
-							 
-							<label for="exampleInputFile">
-								File input
-							</label>
-							<input class="form-control-file" id="exampleInputFile" type="file" />
-							<p class="help-block">
-								Example block-level help text here.
-							</p>
-						</div>
 						<div class="checkbox">
-							 
 							<label>
 								<input type="checkbox" /> Check me out
 							</label>
@@ -85,31 +75,18 @@
 				<div class="col-md-12">
 					<form role="form">
 						<div class="form-group">
-							 
 							<label for="exampleInputEmail1">
 								Email address
 							</label>
 							<input class="form-control" id="exampleInputEmail1" type="email" />
 						</div>
 						<div class="form-group">
-							 
 							<label for="exampleInputPassword1">
 								Password
 							</label>
 							<input class="form-control" id="exampleInputPassword1" type="password" />
 						</div>
-						<div class="form-group">
-							 
-							<label for="exampleInputFile">
-								File input
-							</label>
-							<input class="form-control-file" id="exampleInputFile" type="file" />
-							<p class="help-block">
-								Example block-level help text here.
-							</p>
-						</div>
 						<div class="checkbox">
-							 
 							<label>
 								<input type="checkbox" /> Check me out
 							</label>
@@ -135,5 +112,15 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+$(document).ready( function () { 
+var orderbooks=$('#orderbooks').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){
+                d.token="secure";
+                d.api='list_orderbooks';
+            }}});
+setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+});
+</script>
 </body>
 </html>
