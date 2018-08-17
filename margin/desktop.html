@@ -95,34 +95,55 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
+        <table id="balances" class="display" style="width:100%">
+        <thead>
+            <tr> <th>AccountId</th> <th>Coin</th> <th>Balance</th> <th>Freezed</th> <th>Loan</th> <th>CoinAddress</th> </tr>
+        </thead>
+        </table>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
 		</div>
-	</div>
+	</div>    
 	<div class="row">
 		<div class="col-md-12">
 		</div>
-	</div>
+	</div>    
+	<div class="row">
+		<div class="col-md-12">
+		</div>
+	</div>    
 </div>
+
+
 <script type="text/javascript">
 $(document).ready( function () { 
 var orderbooks=$('#orderbooks').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='list_orderbooks';
                 
             }}});
+setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
 var marketinfo=$('#marketinfo').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_marketinfo';
             d.symbol="BGD/USDT";
             }}});
+setInterval( function () { marketinfo.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );            
+            
 var depth=$('#depth').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_depth';
             d.symbol="BGD/USDT";
             }}});
-setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
-setInterval( function () { marketinfo.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var balances=$('#balances').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='get_balance';
+            d.account_id='1';
+            }}});
+setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+
+
 });
 </script>
 </body>
