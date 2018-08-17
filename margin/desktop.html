@@ -147,7 +147,7 @@ var balances=$('#balances').DataTable( { "ajax": { 'url': '/margin/api.php', 'ty
 setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='get_balance';
+    'data': function(d){d.token="secure";d.api='list_orders';
             d.account_id='1';
             }}});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
