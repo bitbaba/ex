@@ -228,7 +228,7 @@ function buyy(){
         price : $("#BidPrice").val(),
         qty : $("#BidQuantity").val(),
         leverage : $("#BidLeverage").val(),
-        ref_contract_id : $("#BidRefId").val()
+        ref_contract_id : 0//$("#BidRefId").val()
     }, function(resp){
         //console.log(resp); 
     });
@@ -242,7 +242,7 @@ function sell(){
         price : $("#AskPrice").val(),
         qty : $("#AskQuantity").val(),
         leverage : $("#AskLeverage").val(),
-        ref_contract_id : $("#AskRefId").val()
+        ref_contract_id : 0//$("#AskRefId").val()
     }, function(resp){
         //console.log(resp); 
     });
