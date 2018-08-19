@@ -21,38 +21,28 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">OrderBooks</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
+    <!--
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">OrderBooks</span> </div> </div> <div class="row"> <div class="col-md-12">
             <table id="orderbooks" class="display" style="width:100%"><thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead></table>
-		</div>
-	</div>
+	</div> </div>
     <div class="row"> <div class="col-md-12"> <span class="badge badge-default">MarketInfo</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
+	<div class="row"> <div class="col-md-12">
             <table id="marketinfo" class="display" style="width:100%"> <thead> <tr> <th>symbol</th> <th>tradeno</th> <th>latest_price</th> <th>total_qty</th><th>total_cost</th></tr> </thead></table>
-		</div>
-	</div>
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Orders</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
-        <table id="orders" class="display" style="width:100%">
-            <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
-        </table>
-		</div>
-	</div>    
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Contracts</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
-        <table id="contracts" class="display" style="width:100%">
-            <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>st</th> <th>bull</th> <th>open_time</th> <th>close_time</th> <th>liqui_time</th><th>owner</th><th>counterpart</th><th>orderId</th><th>matchId</th><th>costValue</th><th>costPrice</th><th>qty</th><th>feerate</th><th>leverage</th><th>matched_open_contract</th><th>close_order_id</th></tr> </thead>
-        </table>
-		</div>
-	</div>    
+	</div> </div>
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Orders</span> </div> </div> <div class="row"> <div class="col-md-12">
+        <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead> </table> 
+	</div> </div>    
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Contracts</span> </div> </div> <div class="row"> <div class="col-md-12">
+        <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>st</th> <th>bull</th> <th>open_time</th> <th>close_time</th> <th>liqui_time</th><th>owner</th><th>counterpart</th><th>orderId</th><th>matchId</th><th>costValue</th><th>costPrice</th><th>qty</th><th>feerate</th><th>leverage</th><th>matched_open_contract</th><th>close_order_id</th></tr> </thead> </table>
+	</div> </div>    
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Trades</span> </div> </div> <div class="row"> <div class="col-md-12">
+        <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
+	</div> </div>    
+    -->
     <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Depth and PlaceOrder</span> </div> </div>
 	<div class="row">
 		<div class="col-md-6">
-            <table id="depth" class="display" style="width:100%"><thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead></table>
+		    <table id="depth" class="display" style="width:100%"><thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead></table>
 		</div>
 		<div class="col-md-6">
 			<div class="row">
@@ -76,16 +66,10 @@
 							</label>
 							<input class="form-control" id="AskLeverage"/>
 						</div>                        
-						<div class="form-group">
-							<label for="AskRefId">
-							    RefId	
-							</label>
-							<input class="form-control" id="AskRefId"/>
-						</div>                        
 						<button type="button" class="btn btn-primary" onclick="javascript:sell();">
 							Sell
 						</button>
-                        <input type='reset' class='btn btn-primary'/>
+						<input type='reset' class='btn btn-primary'/>
 					</form>
 				</div>
 			</div>
@@ -110,31 +94,52 @@
 							</label>
 							<input class="form-control" id="BidLeverage"/>
 						</div>                        
-						<div class="form-group">
-							<label for="BidRefId">
-							    RefId	
-							</label>
-							<input class="form-control" id="BidRefId"/>
-						</div>                        
 						<button type="button" class="btn btn-primary" onclick="javascript:buyy();">
 							Buyy
 						</button>
-                        <input type='reset' class='btn btn-primary'/>
+						<input type='reset' class='btn btn-primary'/>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Balances</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
-        <table id="balances" class="display" style="width:100%">
-        <thead>
-            <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th> <th>loan</th> <th>coin_address</th> </tr>
-        </thead>
-        </table>
-		</div>
-	</div>
+    <!--
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Balances</span> </div> </div> <div class="row"> <div class="col-md-12">
+        <table id="balances" class="display" style="width:100%"> <thead> <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th> <th>loan</th> <th>coin_address</th> </tr> </thead> </table>
+	</div> </div>
+    -->
+</div>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
+  <li><a data-toggle="tab" href="#MarketInfo">MarketInfo</a></li>
+  <li><a data-toggle="tab" href="#Balances">Balances</a></li>
+  <li><a data-toggle="tab" href="#Orders">Orders</a></li>
+  <li><a data-toggle="tab" href="#Contracts">Contracts</a></li>
+  <li><a data-toggle="tab" href="#Trades">Trades</a></li>
+</ul>
+<div class="tab-content">
+  <div id="OrderBooks" class="tab-pane fade in active">
+    <table id="orderbooks" class="display" style="width:100%"><thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead></table>
+  </div>
+  <div id="MarketInfo" class="tab-pane fade">
+    <table id="marketinfo" class="display" style="width:100%"> <thead> <tr> <th>symbol</th> <th>tradeno</th> <th>latest_price</th> <th>total_qty</th><th>total_cost</th></tr> </thead></table>
+  </div>
+  <div id="Balances" class="tab-pane fade">
+    <table id="balances" class="display" style="width:100%"> <thead> <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th> <th>loan</th> <th>coin_address</th> </tr> </thead> </table>
+  </div>
+  <div id="Orders" class="tab-pane fade">
+    <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead> </table> 
+  </div>
+  <div id="Contracts" class="tab-pane fade">
+    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>st</th> <th>bull</th> <th>open_time</th> <th>close_time</th> <th>liqui_time</th><th>owner</th><th>counterpart</th><th>orderId</th><th>matchId</th><th>costValue</th><th>costPrice</th><th>qty</th><th>feerate</th><th>leverage</th><th>matched_open_contract</th><th>close_order_id</th></tr> </thead> </table>
+  </div>
+  <div id="Trades" class="tab-pane fade">
+    <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
+  </div>
+</div>
+
+<div class="container-fluid">
     <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Deposit and Withdrawal</span> </div> </div>
     <div class="row">
 		<div class="col-md-6">
@@ -160,7 +165,7 @@
 				<button type="submit" class="btn btn-primary">
 					Withdrawal
 				</button>
-                <input type='reset' class='btn btn-primary'/>
+				<input type='reset' class='btn btn-primary'/>
 			</form>
 		</div>
 		<div class="col-md-6">
@@ -186,18 +191,10 @@
 				<button type="submit" class="btn btn-primary">
 					Deposit
 				</button>
-                <input type='reset' class='btn btn-primary'/>
+				<input type='reset' class='btn btn-primary'/>
 			</form>
 		</div>
 	</div>
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Trades</span> </div> </div>
-	<div class="row">
-		<div class="col-md-12">
-        <table id="trades" class="display" style="width:100%">
-            <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead>
-        </table>
-		</div>
-	</div>    
 </div>
 
 
@@ -228,7 +225,7 @@ function buyy(){
         price : $("#BidPrice").val(),
         qty : $("#BidQuantity").val(),
         leverage : $("#BidLeverage").val(),
-        ref_contract_id : 0//$("#BidRefId").val()
+        ref_contract_id : 0
     }, function(resp){
         //console.log(resp); 
     });
@@ -242,7 +239,7 @@ function sell(){
         price : $("#AskPrice").val(),
         qty : $("#AskQuantity").val(),
         leverage : $("#AskLeverage").val(),
-        ref_contract_id : 0//$("#AskRefId").val()
+        ref_contract_id : 0
     }, function(resp){
         //console.log(resp); 
     });
@@ -287,20 +284,26 @@ var balances=$('#balances').DataTable( { "searching": false, "paging": false, "a
             }}});
 setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
-var orders=$('#orders').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_orders';
             d.account_id=CURRENT_ACCOUNT;
-            }}});
+            }},
+        "columnDefs":[{
+            "targets": 0,
+            "data": null,
+            "defaultContent": "<button>revoke</button>"
+        }]
+	});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
-var contracts=$('#contracts').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_contracts';
             d.account_id=CURRENT_ACCOUNT;
             }}});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 
-var trades=$('#trades').DataTable( { "searching": false, "paging": true, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_trades';
             d.symbol=CURRENT_MARKET;
             d.begin='0';
