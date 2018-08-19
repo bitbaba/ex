@@ -15,101 +15,13 @@
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script>
+    /*Setup bootstrap datatables error mode*/
     $.fn.dataTable.ext.errMode='none';
+    /*Utility function to extract parameters from url query*/
     (function ($){$.urlparam=function(name){var reg=new RegExp("(^|&)" + name + "=([^&]*)(&|$)");var r=window.location.search.substr(1).match(reg);if(r!=null)return unescape(r[2]);return null;}})(jQuery);
   </script>
 </head>
 <body>
-<div class="container-fluid">
-    <!--
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">OrderBooks</span> </div> </div> <div class="row"> <div class="col-md-12">
-            <table id="orderbooks" class="display" style="width:100%"><thead> <tr> <th>feerate</th> <th>symbol</th></tr> </thead></table>
-	</div> </div>
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">MarketInfo</span> </div> </div>
-	<div class="row"> <div class="col-md-12">
-            <table id="marketinfo" class="display" style="width:100%"> <thead> <tr> <th>symbol</th> <th>tradeno</th> <th>latest_price</th> <th>total_qty</th><th>total_cost</th></tr> </thead></table>
-	</div> </div>
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Orders</span> </div> </div> <div class="row"> <div class="col-md-12">
-        <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead> </table> 
-	</div> </div>    
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Contracts</span> </div> </div> <div class="row"> <div class="col-md-12">
-        <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>st</th> <th>bull</th> <th>open_time</th> <th>close_time</th> <th>liqui_time</th><th>owner</th><th>counterpart</th><th>orderId</th><th>matchId</th><th>costValue</th><th>costPrice</th><th>qty</th><th>feerate</th><th>leverage</th><th>matched_open_contract</th><th>close_order_id</th></tr> </thead> </table>
-	</div> </div>    
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Trades</span> </div> </div> <div class="row"> <div class="col-md-12">
-        <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
-	</div> </div>    
-    -->
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Depth and PlaceOrder</span> </div> </div>
-	<div class="row">
-		<div class="col-md-6">
-		    <table id="depth" class="display" style="width:100%"><thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead></table>
-		</div>
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12">
-					<form role="form">
-						<div class="form-group">
-							<label for="AskPrice">
-								AskPrice
-							</label>
-							<input class="form-control" id="AskPrice"/>
-						</div>
-						<div class="form-group">
-							<label for="AskQuantity">
-								Quantity
-							</label>
-							<input class="form-control" id="AskQuantity"/>
-						</div>
-						<div class="form-group">
-							<label for="AskLeverage">
-								Leverage
-							</label>
-							<input class="form-control" id="AskLeverage"/>
-						</div>                        
-						<button type="button" class="btn btn-primary" onclick="javascript:sell();">
-							Sell
-						</button>
-						<input type='reset' class='btn btn-primary'/>
-					</form>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<form role="form">
-						<div class="form-group">
-							<label for="BidPrice">
-								BidPrice
-							</label>
-							<input class="form-control" id="BidPrice"/>
-						</div>
-						<div class="form-group">
-							<label for="BidQuantity">
-								Quantity
-							</label>
-							<input class="form-control" id="BidQuantity"/>
-						</div>
-						<div class="form-group">
-							<label for="BidLeverage">
-								Leverage
-							</label>
-							<input class="form-control" id="BidLeverage"/>
-						</div>                        
-						<button type="button" class="btn btn-primary" onclick="javascript:buyy();">
-							Buyy
-						</button>
-						<input type='reset' class='btn btn-primary'/>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-    <!--
-    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Balances</span> </div> </div> <div class="row"> <div class="col-md-12">
-        <table id="balances" class="display" style="width:100%"> <thead> <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th> <th>loan</th> <th>coin_address</th> </tr> </thead> </table>
-	</div> </div>
-    -->
-</div>
-
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
   <li><a data-toggle="tab" href="#MarketInfo">MarketInfo</a></li>
@@ -140,60 +52,83 @@
 </div>
 
 <div class="container-fluid">
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Depth and PlaceOrder</span> </div> </div>
+	<div class="row">
+		<div class="col-md-6">
+		    <table id="depth" class="display" style="width:100%"><thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead></table>
+		</div>
+		<div class="col-md-6"> 
+			<div class="row"> <div class="col-md-12"> <form role="form">
+				<div class="form-group">
+					<label for="AskPrice"> AskPrice </label>
+					<input class="form-control" id="AskPrice"/>
+				</div>
+				<div class="form-group">
+					<label for="AskQuantity"> Quantity </label>
+					<input class="form-control" id="AskQuantity"/>
+				</div>
+				<div class="form-group">
+					<label for="AskLeverage"> Leverage </label>
+					<input class="form-control" id="AskLeverage"/>
+				</div>                        
+				<button type="button" class="btn btn-primary" onclick="javascript:sell();">
+					Sell
+				</button>
+				<input type='reset' class='btn btn-primary'/> </form> </div> </div>
+			<div class="row"> <div class="col-md-12"> <form role="form">
+				<div class="form-group">
+					<label for="BidPrice"> BidPrice </label>
+					<input class="form-control" id="BidPrice"/>
+				</div>
+				<div class="form-group">
+					<label for="BidQuantity"> Quantity </label>
+					<input class="form-control" id="BidQuantity"/>
+				</div>
+				<div class="form-group">
+					<label for="BidLeverage"> Leverage </label>
+					<input class="form-control" id="BidLeverage"/>
+				</div>                        
+				<button type="button" class="btn btn-primary" onclick="javascript:buyy();">
+					Buyy
+				</button>
+				<input type='reset' class='btn btn-primary'/> </form> </div> </div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
     <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Deposit and Withdrawal</span> </div> </div>
     <div class="row">
-		<div class="col-md-6">
-			<form role="form">
+		<div class="col-md-6"> <form role="form">
 				<div class="form-group">					 
-					<label for="WithdrawalCoin">
-						Coin
-					</label>
+					<label for="WithdrawalCoin"> Coin </label>
 					<input class="form-control" id="WithdrawalCoin"/>
 				</div>
 				<div class="form-group">					 
-					<label for="WithdrawalQuantity">
-						Quantity
-					</label>
+					<label for="WithdrawalQuantity"> Quantity </label>
 					<input class="form-control" id="WithdrawalQuantity"/>
 				</div>
 				<div class="form-group">					 
-					<label for="WithdrawalAddress">
-						Address
-					</label>
+					<label for="WithdrawalAddress"> Address </label>
 					<input class="form-control" id="WithdrawalAddress"/>
 				</div>                
-				<button type="submit" class="btn btn-primary">
-					Withdrawal
-				</button>
-				<input type='reset' class='btn btn-primary'/>
-			</form>
-		</div>
-		<div class="col-md-6">
-			<form role="form">
+				<button type="submit" class="btn btn-primary"> Withdrawal </button>
+				<input type='reset' class='btn btn-primary'/> </form> </div>
+		<div class="col-md-6"> <form role="form">
 				<div class="form-group">					 
-					<label for="DepositCoin">
-						Coin
-					</label>
+					<label for="DepositCoin"> Coin </label>
 					<input class="form-control" id="DepositCoin"/>
 				</div>
 				<div class="form-group">					 
-					<label for="DepositQuantity">
-						Quantity
-					</label>
+					<label for="DepositQuantity"> Quantity </label>
 					<input class="form-control" id="DepositQuantity"/>
 				</div>
 				<div class="form-group">					 
-					<label for="DepositAddress">
-						Address
-					</label>
+					<label for="DepositAddress"> Address </label>
 					<input class="form-control" id="DepositAddress"/>
 				</div>                
-				<button type="submit" class="btn btn-primary">
-					Deposit
-				</button>
-				<input type='reset' class='btn btn-primary'/>
-			</form>
-		</div>
+				<button type="submit" class="btn btn-primary"> Deposit </button>
+				<input type='reset' class='btn btn-primary'/> </form> </div>
 	</div>
 </div>
 
@@ -288,18 +223,18 @@ var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax"
     'data': function(d){d.token="secure";d.api='list_orders';
             d.account_id=CURRENT_ACCOUNT;
             }},
-        "columnDefs":[{
-            "targets": 0,
-            "data": null,
-            "defaultContent": "<button>revoke</button>"
-        }]
-	});
+        "columnDefs":[
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='"+row[0]+"'>revoke:"+row[0]+"</a>"; return row[0];}}
+	]});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_contracts';
             d.account_id=CURRENT_ACCOUNT;
-            }}});
+            }},
+        "columnDefs":[
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='"+row[0]+"'>close:"+row[0]+"</a>"; return row[0];}}
+	]});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 
