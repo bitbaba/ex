@@ -31,29 +31,12 @@
   </style>
 </head>
 <body>
-
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#Timeline">Timeline</a></li>
-  <li><a data-toggle="tab" href="#KLine_5m">KLine_5m</a></li>
-</ul>
-<div class="tab-content">
-  <div id="Timeline" class="tab-pane fade in active">
-    <div style="width:90%;">
-        <canvas id="canvas"></canvas>
-    </div>    
-  </div>
-  <div id="KLine_5m" class="tab-pane fade">
-    <div style="width:90%;">
-        <canvas id="canvas_K5m"></canvas>
-    </div>
-  </div>
-</div>
-
-<hr>
-
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
   <li><a data-toggle="tab" href="#Balances">Balances</a></li>
+  <li><a data-toggle="tab" href="#Orders">Orders</a></li>
+  <li><a data-toggle="tab" href="#Contracts">Contracts</a></li>
+  <li><a data-toggle="tab" href="#Trades">Trades</a></li>
 </ul>
 <div class="tab-content">
   <div id="OrderBooks" class="tab-pane fade in active">
@@ -61,6 +44,24 @@
   </div>
   <div id="Balances" class="tab-pane fade">
     <table id="balances" class="display" style="width:100%"> <thead> <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th><th>bull</th> <th>bull_freezed</th><th>bear</th> <th>bear_freezed</th> <th>loan</th> <th>coin_address</th> </tr> </thead> </table>
+  </div>
+  <div id="Orders" class="tab-pane fade">
+    <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th><th>onbook</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>match_contract</th></tr> </thead> </table> 
+  </div>
+  <div id="Contracts" class="tab-pane fade">
+    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>level</th> <th>st</th> <th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr> </thead> </table>
+  </div>
+  <div id="Trades" class="tab-pane fade">
+    <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
+  </div>
+</div>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#Timeline">Timeline</a></li>
+</ul>
+<div class="tab-content">
+  <div id="Timeline" class="tab-pane fade in active">
+    <div style="width:90%;"><canvas id="price_canvas"></canvas></div>
   </div>
 </div>
 
@@ -99,7 +100,7 @@
                     </div>                       
                     <div class="form-group">
                         <label for="AskMatchContract"> Contract </label>
-                        <input class="form-control" id="AskMatchContract" disabled value='0'/>
+                        <input class="form-control" id="AskMatchContract" readonly=true value='0'/>
                     </div>                 
                     <button type="button" class="btn btn-primary" onclick="javascript:short_open();">
                         Short(Open)
@@ -131,7 +132,7 @@
                     </div>                      
                     <div class="form-group">
                         <label for="BidMatchContract"> Contract </label>
-                        <input class="form-control" id="BidMatchContract" disabled value='0'/>
+                        <input class="form-control" id="BidMatchContract" readonly=true value='0'/>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="javascript:long_open();">
                         Long(Open)
@@ -184,23 +185,6 @@
 	</div>
 </div>
 
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#Orders">Orders</a></li>
-  <li><a data-toggle="tab" href="#Contracts">Contracts</a></li>
-  <li><a data-toggle="tab" href="#Trades">Trades</a></li>
-</ul>
-<div class="tab-content">
-  <div id="Orders" class="tab-pane fade in active">
-    <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th><th>onbook</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>match_contract</th></tr> </thead> </table> 
-  </div>
-  <div id="Contracts" class="tab-pane fade">
-    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>level</th> <th>st</th> <th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr> </thead> </table>
-  </div>
-  <div id="Trades" class="tab-pane fade">
-    <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
-  </div>
-</div>
-
 <script type="text/javascript">
 /**
 * Global Settings
@@ -215,6 +199,57 @@ if ($.urlparam('account') != null){
 
 if ($.urlparam('market') != null){
     CURRENT_MARKET = $.urlparam('market');
+}
+
+var config = {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Price',
+            backgroundColor: window.chartColors.grey,
+            borderColor: window.chartColors.red,
+            data: [],
+            fill: !true,
+        }]
+    }, options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Quote'
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Minute(s)'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Price'
+                }
+            }]
+        }
+    }
+};
+
+var addPrice = function(price){
+    var minIndex = config.data.labels.length;
+    config.data.labels.push(minIndex);
+    config.data.datasets[0].data.push(price);
+    window.myPrice.update();
 }
 
 /**
@@ -255,8 +290,8 @@ var long_close = function(){
         symbol : CURRENT_MARKET,
         price : $("#CloseAskPrice").val(),
         qty : $("#CloseAskQuantity").val(),
-        leverage : $("input:radio[name='CloseAskLeverage']:checked").val(),
-        ref_contract_id : 0
+        leverage : $("#CloseAskLeverage").val(),
+        ref_contract_id : $("#CloseAsdMatchContract").val()
     }, function(resp){
         //console.log(resp); 
     });
@@ -269,8 +304,8 @@ var short_close = function(){
         symbol : CURRENT_MARKET,
         price : $("#CloseBidPrice").val(),
         qty : $("#CloseBidQuantity").val(),
-        leverage : $("input:radio[name='CloseBidLeverage']:checked").val(),
-        ref_contract_id : 0
+        leverage : $("#CloseBidLeverage").val(),
+        ref_contract_id : $("#CloseBidMatchContract").val()
     }, function(resp){
         //console.log(resp); 
     });
@@ -278,16 +313,15 @@ var short_close = function(){
 
 function setcloseform(bull, cid, qty_open, leverage){
     if (bull){
-        $("#CloseAskQuantity").val(qty_open);
+        $("#CloseAskQuantity").val(qty_open/leverage);
         $("#CloseAsdMatchContract").val(cid);
         $("#CloseAskLeverage").val(leverage);
     }else{
-        $("#CloseBidQuantity").val(qty_open);
+        $("#CloseBidQuantity").val(qty_open/leverage);
         $("#CloseBidMatchContract").val(cid);
         $("#CloseBidLeverage").val(leverage);
     }
 }
-
 
 function setprice(bull, price){
     if (bull){
@@ -310,15 +344,28 @@ function revoke(order_id){
     });
 }
 
-
 $(document).ready( function () { 
+/**
+* Initialize Chart
+*/
+window.myPrice = new Chart(document.getElementById('price_canvas').getContext('2d'), config);
+setInterval(function (){
+    $.post('/margin/api.php', {
+        api: 'list_orderbooks'    
+    }, function(resp){
+        obj = JSON.parse(resp);
+        addPrice(parseFloat(obj.data[0][7]));
+        console.log(obj.length);
+    });
+}, 60*1000);
+
 /**
 * Viewers
 */
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='list_orderbooks';
             }}});
-setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+//setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_depth';
@@ -327,13 +374,13 @@ var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": {
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Ask":"Bid")+"</a>"; return row[0];}}
 	]});
-setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+//setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_balance';
             d.account_id=CURRENT_ACCOUNT;
             }}});
-setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+//setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_orders';
@@ -342,7 +389,7 @@ var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax"
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
 	]});
-setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+//setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_contracts';
@@ -351,8 +398,7 @@ var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, 
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[4]+","+row[0]+","+row[17]+","+row[23]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
 	]});
-setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
-            
+//setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_trades';
@@ -360,87 +406,11 @@ var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax"
             d.begin='0';
             d.limit='10';
             }}});
-
-setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+//setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 });
 </script>
 
-<script>
-    var config = {
-        type: 'line',
-        data: {
-            labels: ['0'],
-            datasets: [{
-                label: 'Price',
-                backgroundColor: window.chartColors.grey,
-                borderColor: window.chartColors.red,
-                data: [
-                    0.0
-                ],
-                fill: !true,
-            }, {
-                label: 'Volume',
-                backgroundColor: window.chartColors.green,
-                borderColor: window.chartColors.purple,
-                data: [
-                    0.0
-                ],
-                fill: true,
-            }]
-        },
-        options: {
-            responsive: true,
-            title: {
-                display: true,
-                text: 'Quote'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false,
-            },
-            hover: {
-                mode: 'nearest',
-                intersect: true
-            },
-            scales: {
-                xAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Minute(s)'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Price/Volume'
-                    }
-                }]
-            }
-        }
-    };
-
-    window.onload = function() {
-        window.myLine = new Chart(document.getElementById('canvas').getContext('2d'), config);
-        //window.myLine1 = new Chart(document.getElementById('canvas_K5m').getContext('2d'), config);
-    };
-    
-    var canvas_click = function() {
-        addpoint(randomScalingFactor(), randomScalingFactor()/10);
-    };
-    
-    document.getElementById('canvas').addEventListener('click', canvas_click);
-    
-    var addpoint = function(price, volume){
-        var minIndex = config.data.labels.length;
-        config.data.labels.push(minIndex);
-        config.data.datasets[0].data.push(price);
-        config.data.datasets[1].data.push(volume);
-        window.myLine.update();
-    }
-</script>
 
 </body>
 </html>
