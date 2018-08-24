@@ -365,7 +365,7 @@ setInterval(function (){
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='list_orderbooks';
             }}});
-//setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_depth';
@@ -374,13 +374,13 @@ var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": {
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Ask":"Bid")+"</a>"; return row[0];}}
 	]});
-//setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_balance';
             d.account_id=CURRENT_ACCOUNT;
             }}});
-//setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_orders';
@@ -389,7 +389,7 @@ var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax"
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
 	]});
-//setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='list_contracts';
@@ -398,7 +398,7 @@ var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, 
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[4]+","+row[0]+","+row[17]+","+row[23]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
 	]});
-//setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='get_trades';
@@ -406,7 +406,7 @@ var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax"
             d.begin='0';
             d.limit='10';
             }}});
-//setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 });
 </script>
