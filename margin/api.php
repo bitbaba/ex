@@ -51,17 +51,33 @@ function revoke_order($account_id, $symbol, $order_id){
 	return req("revoke_order", '['.$account_id.',"'.$symbol.'",'.$order_id.']');
 }
 
-function place_order($account_id, $symbol, $buy, $price, $qty, $leverage,$ref_contract_id){
+function __place_order($account_id, $symbol, $buy, $price, $qty, $leverage,$ref_contract_id){
 	return req("place_order"
 		, '['.$account_id.', "'.$symbol.'", '.$buy.', "'.$price.'", "'.$qty.'", "'.$leverage.'", '.$ref_contract_id.']');
 }
 
-function buyy($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
-	return place_order($account_id, $symbol, 'true', $price, $qty, $leverage, $ref_contract_id);
+function _buyy($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
+	return __place_order($account_id, $symbol, 'true'/*buy or long*/, $price, $qty, $leverage, $ref_contract_id);
 }
 
-function sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id){
-	return place_order($account_id, $symbol, 'false', $price, $qty,$leverage,$ref_contract_id);
+function _sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id){
+	return __place_order($account_id, $symbol, 'false'/*sell or short*/, $price, $qty,$leverage,$ref_contract_id);
+}
+
+function long_open($account_id, $symbol, $price, $qty, $leverage){
+	return _buyy($account_id, $symbol, $price, $qty, $leverage, '0');
+}
+
+function short_open($account_id, $symbol, $price, $qty, $leverage){
+	return _sell($account_id, $symbol, $price, $qty, $leverage, '0');
+}
+
+function short_close($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
+	return _buyy($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id);
+}
+
+function long_close($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
+	return _sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id);
 }
 
 function deposit($account_id, $coin, $qty){
@@ -72,10 +88,6 @@ function withdrawal($account_id, $coin, $qty){
 }
 function get_balance($account_id){
 	return req("get_balance", '['.$account_id.']');
-}
-
-function get_marketinfo($symbol){
-	return req("get_marketinfo", '["'.$symbol.'"]');
 }
 
 function get_trades($symbol, $begin, $limit){
@@ -107,18 +119,20 @@ function dispatch(){
 		return list_orders(GetParam('account_id'));
 	} else if ($api == 'revoke_order'){
 		return revoke_order(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));
-	} else if ($api == 'buyy'){
-		return buyy(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
-	} else if ($api == 'sell'){
-		return sell(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'long_open'){
+		return long_open(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'));
+    } else if ($api == 'short_close' ){		
+		return short_close(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
+	} else if ($api == 'short_open') { 
+		return short_open(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'));
+    } else if ($api == 'long_close' ){
+		return long_close(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
 	} else if ($api == 'deposit'){
 		return deposit(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
 	} else if ($api == 'withdrawal'){
 		return withdrawal(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
 	} else if ($api == 'get_balance'){
 		return get_balance(GetParam('account_id'));
-	} else if ($api == 'get_marketinfo'){
-		return get_marketinfo(GetParam('symbol'));
 	} else if ($api == 'get_trades'){
 		return get_trades(GetParam('symbol'), GetParam('begin'), GetParam('limit'));
 	} else {
