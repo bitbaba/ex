@@ -368,7 +368,7 @@ var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false,
 setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='DB_ListDepth';
+    'data': function(d){d.token="secure";d.api='API_ListDepth';
             d.symbol=CURRENT_MARKET;
             }},
         "columnDefs":[
