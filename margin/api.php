@@ -98,10 +98,10 @@ function MainEntrance(){
 	$api=GetParam("api");
 	if ($api == 'DB_ListOrderBooks'){
 		return DB_ListOrderBooks();
-	} else if ($api == 'DB_ListDepth'){
-		return DB_ListDepth(GetParam('symbol')); 
 	} else if ($api == 'DB_GetTrades'){
 		return DB_GetTrades(GetParam('symbol')); 
+	} else if ($api == 'API_ListDepth'){
+		return API_ListDepth(GetParam('symbol')); 
     } else if ($api == 'API_PlaceOrder' ){		
 		return API_PlaceOrder(GetParam('account_id'), GetParam('symbol'), GetParam('buy'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));        
 	} else if ($api == 'API_RevokeOrder'){
