@@ -32,6 +32,15 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#Timeline">Timeline</a></li>
+</ul>
+<div class="tab-content">
+  <div id="Timeline" class="tab-pane fade in active">
+    <div style="width:90%;"><canvas id="price_canvas"></canvas></div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
   <li><a data-toggle="tab" href="#Balances">Balances</a></li>
   <li><a data-toggle="tab" href="#Orders">Orders</a></li>
@@ -53,15 +62,6 @@
   </div>
   <div id="Trades" class="tab-pane fade">
     <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
-  </div>
-</div>
-
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#Timeline">Timeline</a></li>
-</ul>
-<div class="tab-content">
-  <div id="Timeline" class="tab-pane fade in active">
-    <div style="width:90%;"><canvas id="price_canvas"></canvas></div>
   </div>
 </div>
 
@@ -256,10 +256,10 @@ var addPrice = function(price){
 * Modifiers
 */
 var short_open = function(){
-    $.post('/margin/api.php', {
-        api: 'short_open',
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
         account_id : CURRENT_ACCOUNT,
         symbol : CURRENT_MARKET,
+        buy: 'false',
         price : $("#AskPrice").val(),
         qty : $("#AskQuantity").val(),
         leverage : $("input:radio[name='AskLeverage']:checked").val(),
@@ -270,10 +270,10 @@ var short_open = function(){
 }
 
 var long_open = function(){
-    $.post('/margin/api.php', {
-        api: 'long_open',
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
         account_id : CURRENT_ACCOUNT,
         symbol : CURRENT_MARKET,
+        buy: 'true',
         price : $("#BidPrice").val(),
         qty : $("#BidQuantity").val(),
         leverage : $("input:radio[name='BidLeverage']:checked").val(),
@@ -284,10 +284,10 @@ var long_open = function(){
 }
 
 var long_close = function(){
-    $.post('/margin/api.php', {
-        api: 'long_close',
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
         account_id : CURRENT_ACCOUNT,
         symbol : CURRENT_MARKET,
+        buy: 'false',
         price : $("#CloseAskPrice").val(),
         qty : $("#CloseAskQuantity").val(),
         leverage : $("#CloseAskLeverage").val(),
@@ -298,10 +298,10 @@ var long_close = function(){
 }
 
 var short_close = function(){
-    $.post('/margin/api.php', {
-        api: 'short_close',
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
         account_id : CURRENT_ACCOUNT,
         symbol : CURRENT_MARKET,
+        buy: 'true',
         price : $("#CloseBidPrice").val(),
         qty : $("#CloseBidQuantity").val(),
         leverage : $("#CloseBidLeverage").val(),
@@ -335,7 +335,7 @@ function setprice(bull, price){
 
 function revoke(order_id){
     $.post('/margin/api.php', {
-        api: 'revoke_order',
+        api: 'API_RevokeOrder',
         account_id : CURRENT_ACCOUNT,
         symbol : CURRENT_MARKET,
         order_id : order_id
@@ -351,7 +351,7 @@ $(document).ready( function () {
 window.myPrice = new Chart(document.getElementById('price_canvas').getContext('2d'), config);
 setInterval(function (){
     $.post('/margin/api.php', {
-        api: 'list_orderbooks'    
+        api: 'DB_ListOrderBooks'    
     }, function(resp){
         obj = JSON.parse(resp);
         addPrice(parseFloat(obj.data[0][7]));
@@ -363,50 +363,48 @@ setInterval(function (){
 * Viewers
 */
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){ d.token="secure";d.api='list_orderbooks';
+    'data': function(d){ d.token="secure";d.api='DB_ListOrderBooks';
             }}});
-//setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='list_depth';
+    'data': function(d){d.token="secure";d.api='DB_ListDepth';
             d.symbol=CURRENT_MARKET;
             }},
         "columnDefs":[
-	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Ask":"Bid")+"</a>"; return row[0];}}
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Bid":"Ask")+"</a>"; return row[0];}}
 	]});
-//setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='get_balance';
+    'data': function(d){d.token="secure";d.api='API_GetBalance';
             d.account_id=CURRENT_ACCOUNT;
             }}});
-//setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='list_orders';
+    'data': function(d){d.token="secure";d.api='API_ListOrders';
             d.account_id=CURRENT_ACCOUNT;
             }},
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
 	]});
-//setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='list_contracts';
+    'data': function(d){d.token="secure";d.api='API_ListContracts';
             d.account_id=CURRENT_ACCOUNT;
             }},
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[4]+","+row[0]+","+row[17]+","+row[23]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
 	]});
-//setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='get_trades';
+    'data': function(d){d.token="secure";d.api='DB_GetTrades';
             d.symbol=CURRENT_MARKET;
-            d.begin='0';
-            d.limit='10';
             }}});
-//setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 });
 </script>

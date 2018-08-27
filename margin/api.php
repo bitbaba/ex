@@ -9,11 +9,19 @@ function RPC_PORT()
 	return "10086";
 }
 
+function GetParam($name){
+	if (isset($_REQUEST[$name])) 
+        return $_REQUEST[$name];
+}
+
+function TokenCheck(){
+	return true;//(GetParam("token") == "secure");
+}
+
 function req($method, $params){
         $url = 'http://' . RPC_HOST() . ':'. RPC_PORT() .'/';
         $header[] = "content-type: text/plain";
         $json_req = '{"jsonrpc":"1.0", "id":"qm", "method":"'.$method.'", "params":'.$params.'}';
-        //echo $json_req;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -29,117 +37,92 @@ function toaccount($token){
     return $token;
 }
 
-function list_orderbooks(){
-	return req("list_orderbooks"
-		, '[]');
+/**
+* Database operations
+*/
+function DB_ListOrderBooks(){
+	return req("DB_ListOrderBooks", '[]');
 }
 
-function list_depth($symbol){
-	return req("list_depth"
-		, '["'.$symbol.'"]');
+function DB_ListDepth($symbol){
+	return req("DB_ListDepth", '["'.$symbol.'"]');
 }
 
-function list_contracts($account_id){
-	return req("list_contracts", '['.$account_id.']');
+function DB_GetTrades($symbol){
+	return req("DB_GetTrades", '["'.$symbol.'"]');
 }
 
-function list_orders($account_id){
-	return req("list_orders", '['.$account_id.']');
+/**
+* Exported APIs
+*/
+function API_PlaceOrder($account_id, $symbol, $buy, $price, $qty, $leverage, $ref_contract_id){
+	return req("API_PlaceOrder", '['.$account_id.', "'.$symbol.'", '.$buy.', "'.$price.'", "'.$qty.'", "'.$leverage.'", '.$ref_contract_id.']');
 }
 
-function revoke_order($account_id, $symbol, $order_id){
-	return req("revoke_order", '['.$account_id.',"'.$symbol.'",'.$order_id.']');
+function API_RevokeOrder($account_id, $symbol, $order_id){
+	return req("API_RevokeOrder", '['.$account_id.',"'.$symbol.'",'.$order_id.']');
 }
 
-function __place_order($account_id, $symbol, $buy, $price, $qty, $leverage,$ref_contract_id){
-	return req("place_order"
-		, '['.$account_id.', "'.$symbol.'", '.$buy.', "'.$price.'", "'.$qty.'", "'.$leverage.'", '.$ref_contract_id.']');
+function API_ListOrders($account_id){
+	return req("API_ListOrders", '['.$account_id.']');
 }
 
-function _buyy($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
-	return __place_order($account_id, $symbol, 'true'/*buy or long*/, $price, $qty, $leverage, $ref_contract_id);
+function API_ListContracts($account_id){
+	return req("API_ListContracts", '['.$account_id.']');
 }
 
-function _sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id){
-	return __place_order($account_id, $symbol, 'false'/*sell or short*/, $price, $qty,$leverage,$ref_contract_id);
+function API_AddMargin($account_id, $symbol, $ref_contract_id, $margin){
+    return req("API_AddMargin", '['.$account_id.',"'.$symbol.'",'.$ref_contract_id.',"'.$margin.'"]');
 }
 
-function long_open($account_id, $symbol, $price, $qty, $leverage){
-	return _buyy($account_id, $symbol, $price, $qty, $leverage, '0');
+function API_GetBalance($account_id){	
+	return req("API_GetBalance", '['.$account_id.']');
 }
 
-function short_open($account_id, $symbol, $price, $qty, $leverage){
-	return _sell($account_id, $symbol, $price, $qty, $leverage, '0');
+function API_Deposit($account_id, $coin, $qty){
+	return req("API_Deposit", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
 }
 
-function short_close($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
-	return _buyy($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id);
+function API_Withdrawal($account_id, $coin, $qty){
+	return req("API_Withdrawal", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
 }
 
-function long_close($account_id, $symbol, $price, $qty, $leverage, $ref_contract_id){
-	return _sell($account_id, $symbol, $price, $qty,$leverage, $ref_contract_id);
-}
-
-function deposit($account_id, $coin, $qty){
-	return req("deposit", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
-}
-function withdrawal($account_id, $coin, $qty){
-	return req("withdrawal", '['.$account_id.',"'.$coin.'","'.$qty.'"]');
-}
-function get_balance($account_id){
-	return req("get_balance", '['.$account_id.']');
-}
-
-function get_trades($symbol, $begin, $limit){
-	return req("get_trades", '["'.$symbol.'",'.$begin.','.$limit.']');
-}
-
-function GetParam($name){
-	if (isset($_REQUEST[$name])) 
-        return $_REQUEST[$name];
-}
-
-function TokenCheck(){
-	return true;//(GetParam("token") == "secure");
-}
-
-function dispatch(){
+/**
+* Main Entry
+*/
+function MainEntrance(){
 	if (!TokenCheck()){ 
 		return "auth failed";
 	}
 
 	$api=GetParam("api");
-	if ($api == 'list_orderbooks'){
-		return list_orderbooks();
-	} else if ($api == 'list_depth'){
-		return list_depth(GetParam('symbol')); 
-	} else if ($api == 'list_contracts'){
-		return list_contracts(GetParam('account_id'));
-	} else if ($api == 'list_orders'){
-		return list_orders(GetParam('account_id'));
-	} else if ($api == 'revoke_order'){
-		return revoke_order(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));
-	} else if ($api == 'long_open'){
-		return long_open(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'));
-    } else if ($api == 'short_close' ){		
-		return short_close(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
-	} else if ($api == 'short_open') { 
-		return short_open(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'));
-    } else if ($api == 'long_close' ){
-		return long_close(GetParam('account_id'), GetParam('symbol'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));
-	} else if ($api == 'deposit'){
-		return deposit(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
-	} else if ($api == 'withdrawal'){
-		return withdrawal(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
-	} else if ($api == 'get_balance'){
-		return get_balance(GetParam('account_id'));
-	} else if ($api == 'get_trades'){
-		return get_trades(GetParam('symbol'), GetParam('begin'), GetParam('limit'));
+	if ($api == 'DB_ListOrderBooks'){
+		return DB_ListOrderBooks();
+	} else if ($api == 'DB_ListDepth'){
+		return DB_ListDepth(GetParam('symbol')); 
+	} else if ($api == 'DB_GetTrades'){
+		return DB_GetTrades(GetParam('symbol')); 
+    } else if ($api == 'API_PlaceOrder' ){		
+		return API_PlaceOrder(GetParam('account_id'), GetParam('symbol'), GetParam('buy'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));        
+	} else if ($api == 'API_RevokeOrder'){
+		return API_RevokeOrder(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));   
+	} else if ($api == 'API_ListOrders'){
+		return API_ListOrders(GetParam('account_id'));        
+	} else if ($api == 'API_ListContracts'){
+		return API_ListContracts(GetParam('account_id'));
+	} else if ($api == 'API_AddMargin'){
+		return API_AddMargin(GetParam('account_id'), GetParam('symbol'), GetParam('ref_contract_id'), GetParam('margin'));
+	} else if ($api == 'API_GetBalance'){
+		return API_GetBalance(GetParam('account_id'));        
+	} else if ($api == 'API_Deposit'){
+		return API_Deposit(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
+	} else if ($api == 'API_Withdrawal'){
+		return API_Withdrawal(GetParam('account_id'),GetParam('coin'),GetParam('qty'));
 	} else {
 		return "undefined api";
 	}
 }
 
-echo dispatch();
+echo MainEntrance();
 
 ?>
