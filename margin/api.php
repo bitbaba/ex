@@ -51,10 +51,6 @@ function DB_GetTrades($symbol){
 /**
 * Exported APIs
 */
-function API_ListDepth($symbol){
-	return req("API_ListDepth", '["'.$symbol.'"]');
-}
-
 function API_PlaceOrder($account_id, $symbol, $buy, $price, $qty, $leverage, $ref_contract_id){
 	return req("API_PlaceOrder", '['.$account_id.', "'.$symbol.'", '.$buy.', "'.$price.'", "'.$qty.'", "'.$leverage.'", '.$ref_contract_id.']');
 }
