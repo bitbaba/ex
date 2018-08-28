@@ -44,10 +44,6 @@ function DB_ListOrderBooks(){
 	return req("DB_ListOrderBooks", '[]');
 }
 
-function DB_ListDepth($symbol){
-	return req("DB_ListDepth", '["'.$symbol.'"]');
-}
-
 function DB_GetTrades($symbol){
 	return req("DB_GetTrades", '["'.$symbol.'"]');
 }
@@ -65,6 +61,10 @@ function API_RevokeOrder($account_id, $symbol, $order_id){
 
 function API_ListOrders($account_id){
 	return req("API_ListOrders", '['.$account_id.']');
+}
+
+function API_ListDepth($symbol){
+	return req("API_ListDepth", '["'.$symbol.'"]');
 }
 
 function API_ListContracts($account_id){
@@ -96,12 +96,12 @@ function MainEntrance(){
 	}
 
 	$api=GetParam("api");
-	if ($api == 'DB_ListOrderBooks'){
+	/*===*/if ($api == 'DB_ListOrderBooks'){
 		return DB_ListOrderBooks();
 	} else if ($api == 'DB_ListDepth'){
 		return DB_ListDepth(GetParam('symbol')); 
-	} else if ($api == 'DB_GetTrades'){
-		return DB_GetTrades(GetParam('symbol')); 
+	} else if ($api == 'API_ListDepth'){
+		return API_ListDepth(GetParam('symbol')); 
     } else if ($api == 'API_PlaceOrder' ){		
 		return API_PlaceOrder(GetParam('account_id'), GetParam('symbol'), GetParam('buy'), GetParam('price'), GetParam('qty'), GetParam('leverage'), GetParam('ref_contract_id'));        
 	} else if ($api == 'API_RevokeOrder'){
