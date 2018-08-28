@@ -14,6 +14,8 @@
   <script type="text/javascript" src="/margin/js/jquery.jsonview.js"></script>
   <script type="text/javascript" src="/margin/js/Chart.bundle.js"></script>
   <script type="text/javascript" src="/margin/js/utils.js"></script>
+  <script type="text/javascript" src="/margin/js/canvasjs.min.js"></script>
+  <!--script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script-->
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script>
@@ -31,9 +33,7 @@
   </style>
 </head>
 <body>
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#Timeline">Timeline</a></li>
-</ul>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
 <div class="tab-content">
   <div id="Timeline" class="tab-pane fade in active">
     <div style="width:90%;"><canvas id="price_canvas"></canvas></div>
@@ -201,57 +201,6 @@ if ($.urlparam('market') != null){
     CURRENT_MARKET = $.urlparam('market');
 }
 
-var config = {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Price',
-            backgroundColor: window.chartColors.grey,
-            borderColor: window.chartColors.red,
-            data: [],
-            fill: !true,
-        }]
-    }, options: {
-        responsive: true,
-        title: {
-            display: true,
-            text: 'Quote'
-        },
-        tooltips: {
-            mode: 'index',
-            intersect: false,
-        },
-        hover: {
-            mode: 'nearest',
-            intersect: true
-        },
-        scales: {
-            xAxes: [{
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Minute(s)'
-                }
-            }],
-            yAxes: [{
-                display: true,
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Price'
-                }
-            }]
-        }
-    }
-};
-
-var addPrice = function(price){
-    var minIndex = config.data.labels.length;
-    config.data.labels.push(minIndex);
-    config.data.datasets[0].data.push(price);
-    window.myPrice.update();
-}
-
 /**
 * Modifiers
 */
@@ -348,17 +297,63 @@ $(document).ready( function () {
 /**
 * Initialize Chart
 */
-window.myPrice = new Chart(document.getElementById('price_canvas').getContext('2d'), config);
-setInterval(function (){
-    $.post('/margin/api.php', {
-        api: 'DB_ListOrderBooks'    
-    }, function(resp){
-        obj = JSON.parse(resp);
-        addPrice(parseFloat(obj.data[0][7]));
-        console.log(obj.length);
-    });
-}, 60*1000);
 
+var dataPoints = [];
+
+var chart = new CanvasJS.Chart("chartContainer", {
+    animationEnabled: true,
+    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    exportEnabled: true,
+    title: {
+        text: "Netflix Stock Price in 2016"
+    },
+    subtitles: [{
+        text: "Weekly Averages"
+    }],
+    axisX: {
+        interval: 1,
+        valueFormatString: "MMM"
+    },
+    axisY: {
+        includeZero: false,
+        prefix: "$",
+        title: "Price"
+    },
+    toolTip: {
+        content: "Date: {x}<br /><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br />High: {y[1]}, Low: {y[2]}"
+    },
+    data: [{
+        type: "candlestick",
+        yValueFormatString: "$##0.00",
+        dataPoints: dataPoints
+    }]
+});
+
+$.get("/margin/js/netflix-stock-price.csv", getDataPointsFromCSV);
+
+function getDataPointsFromCSV(csv) {
+    var csvLines = points = [];
+    csvLines = csv.split(/[\r?\n|\r|\n]+/);
+    for (var i = 0; i < csvLines.length; i++) {
+        if (csvLines[i].length > 0) {
+            points = csvLines[i].split(",");
+            dataPoints.push({
+                x: new Date(
+                    parseInt(points[0].split("-")[0]),
+                    parseInt(points[0].split("-")[1]),
+                    parseInt(points[0].split("-")[2])
+                ),
+                y: [
+                    parseFloat(points[1]),
+                    parseFloat(points[2]),
+                    parseFloat(points[3]),
+                    parseFloat(points[4])
+                ]
+            });
+        }
+    }
+    chart.render();
+}
 /**
 * Viewers
 */
