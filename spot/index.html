@@ -1,0 +1,456 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>exchange</title>
+  <link rel="stylesheet" href="/margin/css/jquery.jsonview.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <script type="text/javascript" src="/margin/js/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="/margin/js/jquery.jsonview.js"></script>
+  <script type="text/javascript" src="/margin/js/Chart.bundle.js"></script>
+  <script type="text/javascript" src="/margin/js/utils.js"></script>
+  <script type="text/javascript" src="/margin/js/canvasjs.min.js"></script>
+  <script type="text/javascript" src="/margin/js/plotly-latest.min.js"></script>
+  <!--script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script-->
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script>
+    /*Setup bootstrap datatables error mode*/
+    $.fn.dataTable.ext.errMode='none';
+    /*Utility function to extract parameters from url query*/
+    (function ($){$.urlparam=function(name){var reg=new RegExp("(^|&)" + name + "=([^&]*)(&|$)");var r=window.location.search.substr(1).match(reg);if(r!=null)return unescape(r[2]);return null;}})(jQuery);
+  </script>
+  <style>
+    canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#TimeSerials">TimeSerials</a></li>
+  <li><a data-toggle="tab" href="#CandleSticks">CandleSticks</a></li>
+</ul>
+<div class="tab-content">
+  <div id="TimeSerials" class="tab-pane fade in active">
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+  </div>
+  <div id="CandleSticks" class="tab-pane fade">
+    <div id="plotly-div" class='center-block plot-container js-plot-panel js-plotly-plot' style="height: 300px; width: 1450px;"></div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
+  <li><a data-toggle="tab" href="#Balances">Balances</a></li>
+  <li><a data-toggle="tab" href="#Orders">Orders</a></li>
+  <li><a data-toggle="tab" href="#Contracts">Contracts</a></li>
+  <li><a data-toggle="tab" href="#Trades">Trades</a></li>
+</ul>
+<div class="tab-content">
+  <div id="OrderBooks" class="tab-pane fade in active">
+    <table id="orderbooks" class="display" style="width:100%"><thead> <tr> <th>symbol</th> <th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>trade_qty</th><th>trade_cost</th><th>latest_price</th><th>trade_no</th></tr> </thead></table>
+  </div>
+  <div id="Balances" class="tab-pane fade">
+    <table id="balances" class="display" style="width:100%"> <thead> <tr> <th>account_id</th> <th>coin</th> <th>balance</th> <th>freezed</th><th>bull</th> <th>bull_freezed</th><th>bear</th> <th>bear_freezed</th> <th>loan</th> <th>coin_address</th> </tr> </thead> </table>
+  </div>
+  <div id="Orders" class="tab-pane fade">
+    <table id="orders" class="display" style="width:100%"> <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th><th>onbook</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>match_contract</th></tr> </thead> </table> 
+  </div>
+  <div id="Contracts" class="tab-pane fade">
+    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>level</th> <th>st</th> <th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr> </thead> </table>
+  </div>
+  <div id="Trades" class="tab-pane fade">
+    <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
+  </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row"> <div class="col-md-12"> <span class="badge badge-default">Depth and PlaceOrder</span> </div> </div>
+	<div class="row">
+		<div class="col-md-6">
+		    <table id="depth" class="display" style="width:100%"><thead> <tr> <th>bid</th> <th>price</th> <th>qty</th> <th>count</th></tr> </thead></table>
+		</div>
+		<div class="col-md-6"> 
+			<div class="row"> <div class="alert alert-success"> Open </div> </div>
+			<div class="row">
+                <div class="col-md-6"> <form role="form">
+                    <div class="form-group">
+                        <label for="AskPrice"> Price(Sell) </label>
+                        <input class="form-control" id="AskPrice"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="AskQuantity"> Quantity </label>
+                        <input class="form-control" id="AskQuantity"/>
+                    </div>
+                    <div class="form-group">
+                        <label> Leverage: </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="AskLeverage" value="1"> 1x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="AskLeverage" value="2"> 2x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="AskLeverage" value="5" checked> 5x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="AskLeverage" value="10"> 10x
+                        </label>                        
+                    </div>                       
+                    <div class="form-group">
+                        <label for="AskMatchContract"> Contract </label>
+                        <input class="form-control" id="AskMatchContract" readonly=true value='0'/>
+                    </div>                 
+                    <button type="button" class="btn btn-primary" onclick="javascript:short_open();">
+                        Short(Open)
+                    </button>
+                    <input type='reset' class='btn btn-primary'/> </form> </div>  
+                <div class="col-md-6"> <form role="form">
+                    <div class="form-group">
+                        <label for="BidPrice"> Price(Buy) </label>
+                        <input class="form-control" id="BidPrice"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="BidQuantity"> Quantity </label>
+                        <input class="form-control" id="BidQuantity"/>
+                    </div>
+                    <div class="form-group">
+                        <label> Leverage: </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="BidLeverage" value="1"> 1x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="BidLeverage" value="2"> 2x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="BidLeverage" value="5" checked> 5x
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="BidLeverage" value="10"> 10x
+                        </label>                        
+                    </div>                      
+                    <div class="form-group">
+                        <label for="BidMatchContract"> Contract </label>
+                        <input class="form-control" id="BidMatchContract" readonly=true value='0'/>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="javascript:long_open();">
+                        Long(Open)
+                    </button>
+                    <input type='reset' class='btn btn-primary'/> </form> </div> </div>
+			<div class="row"> <hr> </div>
+			<div class="row"> <div class="alert alert-danger">Close</div> </div>
+			<div class="row"> 
+                <div class="col-md-6"> <form role="form">
+                    <div class="form-group">
+                        <label for="CloseAskPrice"> Price(Sell) </label>
+                        <input class="form-control" id="CloseAskPrice"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="CloseAskQuantity"> Quantity </label>
+                        <input class="form-control" id="CloseAskQuantity"/>
+                    </div>
+                    <div class="form-group">
+                        <label> Leverage: </label><input class="form-control" value='5' readonly=true id="CloseAskLeverage"/>                     
+                    </div>                      
+                    <div class="form-group">
+                        <label for="CloseAsdMatchContract"> Contract </label>
+                        <input class="form-control" id="CloseAsdMatchContract" readonly=true value='0'/>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="javascript:long_close();">
+                        Long(Close)
+                    </button>
+                    <input type='reset' class='btn btn-primary'/> </form> </div>                    
+                <div class="col-md-6"> <form role="form">
+                    <div class="form-group">
+                        <label for="CloseBidPrice"> Price(Buy) </label>
+                        <input class="form-control" id="CloseBidPrice"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="CloseBidQuantity"> Quantity </label>
+                        <input class="form-control" id="CloseBidQuantity"/>
+                    </div>
+                    <div class="form-group">
+                        <label> Leverage: </label><input class="form-control" value='5' readonly=true id="CloseBidLeverage"/>                       
+                    </div>                      
+                    <div class="form-group">
+                        <label for="CloseBidMatchContract"> Contract </label>
+                        <input class="form-control" id="CloseBidMatchContract" readonly=true value='0'/>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="javascript:short_close();">
+                        Short(Close)
+                    </button>
+                    <input type='reset' class='btn btn-primary'/> </form> </div> </div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+/**
+* Global Settings
+*/
+var CURRENT_ACCOUNT = "1"; //NOTE: should be secret token, API.php will traslate it to account_id;
+
+var CURRENT_MARKET  = "BTC/USDT";
+
+if ($.urlparam('account') != null){
+    CURRENT_ACCOUNT = $.urlparam('account');
+}
+
+if ($.urlparam('market') != null){
+    CURRENT_MARKET = $.urlparam('market');
+}
+
+/**
+* Modifiers
+*/
+var short_open = function(){
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        buy: 'false',
+        price : $("#AskPrice").val(),
+        qty : $("#AskQuantity").val(),
+        leverage : $("input:radio[name='AskLeverage']:checked").val(),
+        ref_contract_id : 0
+    }, function(resp){
+        //console.log(resp); 
+    });
+}
+
+var long_open = function(){
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        buy: 'true',
+        price : $("#BidPrice").val(),
+        qty : $("#BidQuantity").val(),
+        leverage : $("input:radio[name='BidLeverage']:checked").val(),
+        ref_contract_id : 0
+    }, function(resp){
+        //console.log(resp); 
+    });
+}
+
+var long_close = function(){
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        buy: 'false',
+        price : $("#CloseAskPrice").val(),
+        qty : $("#CloseAskQuantity").val(),
+        leverage : $("#CloseAskLeverage").val(),
+        ref_contract_id : $("#CloseAsdMatchContract").val()
+    }, function(resp){
+        //console.log(resp); 
+    });
+}
+
+var short_close = function(){
+    $.post('/margin/api.php', { api: 'API_PlaceOrder',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        buy: 'true',
+        price : $("#CloseBidPrice").val(),
+        qty : $("#CloseBidQuantity").val(),
+        leverage : $("#CloseBidLeverage").val(),
+        ref_contract_id : $("#CloseBidMatchContract").val()
+    }, function(resp){
+        //console.log(resp); 
+    });
+}
+
+function setcloseform(bull, cid, qty_open, leverage){
+    if (bull){
+        $("#CloseAskQuantity").val(qty_open/leverage);
+        $("#CloseAsdMatchContract").val(cid);
+        $("#CloseAskLeverage").val(leverage);
+    }else{
+        $("#CloseBidQuantity").val(qty_open/leverage);
+        $("#CloseBidMatchContract").val(cid);
+        $("#CloseBidLeverage").val(leverage);
+    }
+}
+
+function setprice(bull, price){
+    if (bull){
+        $("#AskPrice").val(price);
+        $("#CloseAskPrice").val(price);
+    }else{
+        $("#BidPrice").val(price);
+        $("#CloseBidPrice").val(price);
+    }
+}
+
+function revoke(order_id){
+    $.post('/margin/api.php', {
+        api: 'API_RevokeOrder',
+        account_id : CURRENT_ACCOUNT,
+        symbol : CURRENT_MARKET,
+        order_id : order_id
+    }, function(resp){
+        //console.log(resp); 
+    });
+}
+
+$(document).ready( function () { 
+/**
+* Initialize Chart
+*/
+
+var dataPoints = [];
+
+var chart = new CanvasJS.Chart("chartContainer", {
+    animationEnabled: true,
+    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    exportEnabled: true,
+    title: {
+        text: "BTC/USDT Price"
+    },
+    subtitles: [{
+        text: "Weekly Averages"
+    }],
+    axisX: {
+        interval: 1,
+        valueFormatString: "MMM"
+    },
+    axisY: {
+        includeZero: false,
+        prefix: "$",
+        title: "Price"
+    },
+    toolTip: {
+        content: "Date: {x}<br /><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br />High: {y[1]}, Low: {y[2]}"
+    },
+    data: [{
+        type: "candlestick",
+        yValueFormatString: "$##0.00",
+        dataPoints: dataPoints
+    }]
+});
+
+$.get("/margin/js/netflix-stock-price.csv", getDataPointsFromCSV);
+
+function getDataPointsFromCSV(csv) {
+    var csvLines = points = [];
+    csvLines = csv.split(/[\r?\n|\r|\n]+/);
+    for (var i = 0; i < csvLines.length; i++) {
+        if (csvLines[i].length > 0) {
+            points = csvLines[i].split(",");
+            dataPoints.push({
+                x: new Date(
+                    parseInt(points[0].split("-")[0]),
+                    parseInt(points[0].split("-")[1]),
+                    parseInt(points[0].split("-")[2])
+                ),
+                y: [
+                    parseFloat(points[1]),
+                    parseFloat(points[2]),
+                    parseFloat(points[3]),
+                    parseFloat(points[4])
+                ]
+            });
+        }
+    }
+    chart.render();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+var trace1 = {
+  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], 
+  close: [116.019997, 116.610001, 117.910004, 118.989998, 119.110001, 119.75, 119.25, 119.040001, 120, 119.989998, 119.779999, 120, 120.080002, 119.970001, 121.879997, 121.940002, 121.949997, 121.629997, 121.349998, 128.75, 128.529999, 129.080002, 130.289993, 131.529999, 132.039993, 132.419998, 132.119995, 133.289993, 135.020004, 135.509995],   
+  high: [116.510002, 116.860001, 118.160004, 119.43, 119.379997, 119.93, 119.300003, 119.620003, 120.239998, 120.5, 120.089996, 120.449997, 120.809998, 120.099998, 122.099998, 122.440002, 122.349998, 121.629997, 129.389999, 130.490005, 129.389999, 129.190002, 130.5, 132.089996, 132.220001, 132.449997, 132.940002, 133.820007, 135.089996, 136.270004], 
+  low: [115.75, 115.809998, 116.470001, 117.940002, 118.300003, 118.599998, 118.209999, 118.809998, 118.220001, 119.709999, 119.370003, 119.730003, 119.769997, 119.5, 120.279999, 121.599998, 121.599998, 120.660004, 120.620003, 127.010002, 127.779999, 128.160004, 128.899994, 130.449997, 131.220001, 131.119995, 132.050003, 132.75, 133.25, 134.619995], 
+  open: [115.849998, 115.919998, 116.779999, 117.949997, 118.769997, 118.739998, 118.900002, 119.110001, 118.339996, 120, 119.400002, 120.449997, 120, 119.550003, 120.419998, 121.669998, 121.139999, 120.93, 128.150002, 127.029999, 127.980003, 128.309998, 129.130005, 130.539993, 131.350006, 131.649994, 132.460007, 133.080002, 133.470001, 135.520004], 
+  type: 'candlestick', 
+  xaxis: 'x', 
+  yaxis: 'y',
+  increasing: {line: {color: 'red'}},
+  decreasing: {line: {color: 'green'}},
+  line: {color: 'black'}  
+};
+
+var data = [trace1];
+
+var layout = {
+  dragmode: 'zoom', 
+  margin: {r: 10, t: 25, b: 40, l: 60}, 
+  showlegend: true, 
+  xaxis: {
+    autorange: true, 
+    domain: [0, 1], 
+    title: 'Minute',
+    type: 'Date',
+    rangeslider: {visible: false}
+  }, 
+  yaxis: {
+    autorange: true, 
+    domain: [0, 1], 
+    title: 'Price',
+    type: 'linear'
+  }
+};
+
+Plotly.plot('plotly-div', data, layout);
+
+/**
+* Viewers
+*/
+var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){ d.token="secure";d.api='DB_ListOrderBooks';
+            }}});
+setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='API_ListDepth';
+            d.symbol=CURRENT_MARKET;
+            }},
+        "columnDefs":[
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Bid":"Ask")+"</a>"; return row[0];}}
+	]});
+setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='API_GetBalance';
+            d.account_id=CURRENT_ACCOUNT;
+            }}});
+setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='API_ListOrders';
+            d.account_id=CURRENT_ACCOUNT;
+            }},
+        "columnDefs":[
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
+	]});
+setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+            
+var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='API_ListContracts';
+            d.account_id=CURRENT_ACCOUNT;
+            }},
+        "columnDefs":[
+	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[4]+","+row[0]+","+row[17]+","+row[23]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
+	]});
+setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+
+var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
+    'data': function(d){d.token="secure";d.api='DB_GetTrades';
+            d.symbol=CURRENT_MARKET;
+            }}});
+setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+
+});
+</script>
+
+
+</body>
+</html>
