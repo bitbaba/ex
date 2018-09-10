@@ -413,6 +413,7 @@ setInterval( function () { balances.ajax.reload( null, false ); /* user paging i
 var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='API_ListOrders';
             d.account_id=CURRENT_ACCOUNT;
+            d.filters="";
             }},
         "columnDefs":[
 	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}

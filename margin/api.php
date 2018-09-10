@@ -59,8 +59,8 @@ function API_RevokeOrder($account_id, $symbol, $order_id){
 	return req("API_RevokeOrder", '['.$account_id.',"'.$symbol.'",'.$order_id.']');
 }
 
-function API_ListOrders($account_id){
-	return req("API_ListOrders", '['.$account_id.']');
+function API_ListOrders($account_id, $filters){
+	return req("API_ListOrders", '['.$account_id.',['.$filters.']]');
 }
 
 function API_ListDepth($symbol){
@@ -107,7 +107,7 @@ function MainEntrance(){
 	} else if ($api == 'API_RevokeOrder'){
 		return API_RevokeOrder(GetParam('account_id'), GetParam('symbol'), GetParam('order_id'));   
 	} else if ($api == 'API_ListOrders'){
-		return API_ListOrders(GetParam('account_id'));        
+		return API_ListOrders(GetParam('account_id'), GetParam('filters'));        
 	} else if ($api == 'API_ListContracts'){
 		return API_ListContracts(GetParam('account_id'));
 	} else if ($api == 'API_AddMargin'){
