@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>exchange</title>
+  <link rel="stylesheet" href="/margin/css/jquery.jsonview.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <script type="text/javascript" src="/margin/js/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="/margin/js/jquery.jsonview.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script>
+    (function ($){$.urlparam=function(name){var reg=new RegExp("(^|&)" + name + "=([^&]*)(&|$)");var r=window.location.search.substr(1).match(reg);if(r!=null)return unescape(r[2]);return null;}})(jQuery);
+  </script>
+</head>
+
+<body>
+<table id="order" class="display" style="width:100%">
+        <thead> <tr> <th>order_id</th> <th>status</th> <th>buy</th> <th>aon</th> <th>ioc</th> <th>revokable</th> <th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>ref_contract_id</th></tr> </thead>
+</table>
+<script type="text/javascript">
+$(document).ready( function () { 
+        var table=$('#order').DataTable( {
+                "ajax": {
+                            'url': '/margin/api.php',
+                            'type': 'POST',
+                            'data': function(d){
+                                        if($.urlparam('account_id')!=null) d.account_id=$.urlparam('account_id');
+                                        if($.urlparam('symbol')!=null) d.symbol=$.urlparam('symbol');
+                                        if($.urlparam('price')!=null) d.price=$.urlparam('price');
+                                        if($.urlparam('qty')!=null) d.qty=$.urlparam('qty');
+                                        if($.urlparam('leverage')!=null) d.leverage=$.urlparam('leverage');
+                                        if($.urlparam('ref_contract_id')!=null) d.ref_contract_id=$.urlparam('ref_contract_id');
+                                        d.token="secure";
+                                        d.api='buyy';
+                                    }
+                        }
+        });
+        setInterval( function () { table.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
+});
+</script>  
+</body>
+</html>

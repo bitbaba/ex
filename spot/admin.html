@@ -43,7 +43,7 @@
 			<label for="WithdrawalAddress"> Address </label>
 			<input class="form-control" id="WithdrawalAddress"/>
 		</div>                
-		<button type="button" class="btn btn-primary" onclick='javascript:withdrawal();'> Withdrawal </button>
+		<button type="submit" class="btn btn-primary"> Withdrawal </button>
 		<input type='reset' class='btn btn-primary'/> </form> </div>
 	<div class="col-md-6"> <form role="form">
 		<div class="form-group">					 
@@ -62,29 +62,18 @@
 			<label for="DepositAddress"> Address </label>
 			<input class="form-control" id="DepositAddress"/>
 		</div>                
-		<button type="button" class="btn btn-primary" onclick='javascript:deposit();'> Deposit </button>
+		<button type="submit" class="btn btn-primary"> Deposit </button>
 		<input type='reset' class='btn btn-primary'/> </form> </div>
     </div>
 </div>
 
 <script type="text/javascript">
-var deposit= function(){
-    $.post('/margin/api.php', { api: 'API_Deposit',
-        account_id : $("#DepositAccount").val(),
-        coin: $("#DepositCoin").val(),
-        qty : $("#DepositQuantity").val()
-    }, function(resp){
-        console.log(resp); 
-    });
+function deposit(){
+
 }
-var withdrawal= function(){
-    $.post('/margin/api.php', { api: 'API_Withdrawal',
-        account_id : $("#WithdrawalAccount").val(),
-        coin: $("#WithdrawalCoin").val(),
-        qty : $("#WithdrawalQuantity").val()
-    }, function(resp){
-        console.log(resp); 
-    });
+
+function withdrawal(){
+
 }
 </script>
 </body>
