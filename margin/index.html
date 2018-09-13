@@ -36,19 +36,6 @@
 
 <body>
 <ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#TimeSerials">TimeSerials</a></li>
-  <li><a data-toggle="tab" href="#CandleSticks">CandleSticks</a></li>
-</ul>
-<div class="tab-content">
-  <div id="TimeSerials" class="tab-pane fade in active">
-    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-  </div>
-  <div id="CandleSticks" class="tab-pane fade">
-    <div id="plotly-div" class='center-block plot-container js-plot-panel js-plotly-plot' style="height: 300px; width: 1450px;"></div>
-  </div>
-</div>
-
-<ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#OrderBooks">OrderBooks</a></li>
   <li><a data-toggle="tab" href="#Balances">Balances</a></li>
   <li><a data-toggle="tab" href="#Orders">Orders</a></li>
@@ -63,10 +50,10 @@
     <table id="balances" class="display" style="width:100%"> <thead> <tr><th>account_id</th><th>coin</th><th>balance</th><th>freezed</th><th>loan</th><th>coin_address</th></tr></thead> </table>
   </div>
   <div id="Orders" class="tab-pane fade">
-    <table id="orders" class="display" style="width:100%"> <thead><tr><th>order_id</th> <th>status</th><th>buy</th><th>aon</th><th>ioc</th><th>revokable</th><th>onbook</th><th>symbol</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>match_contract</th></tr> </thead> </table> 
+    <table id="orders" class="display" style="width:100%"> <thead><tr><th>order_id</th> <th>status</th><th>buy</th><th>aon</th><th>ioc</th><th>revokable</th><th>onbook</th><th>symbol</th><th>symbolpair</th><th>account_id</th><th>place_time</th><th>price</th><th>stop_price</th><th>quantity</th><th>quantity_unfilled</th><th>quantity_filled</th><th>fill_cost</th><th>leverage</th><th>match_contract</th></tr> </thead> </table> 
   </div>
   <div id="Contracts" class="tab-pane fade">
-    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th> <th>symbol</th> <th>level</th> <th>st</th> <th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr> </thead> </table>
+    <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th><th>symbol</th><th>symbolpair</th><th>level</th><th>st</th><th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr></thead></table>
   </div>
   <div id="Trades" class="tab-pane fade">
     <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
@@ -254,7 +241,8 @@ var short_close = function(){
     });
 }
 
-function setcloseform(bull, cid, qty_open, leverage){
+function setcloseform(bull, cid, qty_open){
+	leverage = 1; // force to 1x, when close.
     if (bull){
         $("#CloseAskQuantity").val(qty_open/leverage);
         $("#CloseAsdMatchContract").val(cid);
@@ -287,112 +275,21 @@ function revoke(order_id){
     });
 }
 
-$(document).ready( function () { 
-/**
-* Initialize Chart
-*/
-
-var dataPoints = [];
-
-var chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: true,
-    theme: "light2", // "light1", "light2", "dark1", "dark2"
-    exportEnabled: true,
-    title: {
-        text: "BTC/USDT Price"
-    },
-    subtitles: [{
-        text: "Weekly Averages"
-    }],
-    axisX: {
-        interval: 1,
-        valueFormatString: "MMM"
-    },
-    axisY: {
-        includeZero: false,
-        prefix: "$",
-        title: "Price"
-    },
-    toolTip: {
-        content: "Date: {x}<br /><strong>Price:</strong><br />Open: {y[0]}, Close: {y[3]}<br />High: {y[1]}, Low: {y[2]}"
-    },
-    data: [{
-        type: "candlestick",
-        yValueFormatString: "$##0.00",
-        dataPoints: dataPoints
-    }]
-});
-
-$.get("/margin/js/netflix-stock-price.csv", getDataPointsFromCSV);
-
-function getDataPointsFromCSV(csv) {
-    var csvLines = points = [];
-    csvLines = csv.split(/[\r?\n|\r|\n]+/);
-    for (var i = 0; i < csvLines.length; i++) {
-        if (csvLines[i].length > 0) {
-            points = csvLines[i].split(",");
-            dataPoints.push({
-                x: new Date(
-                    parseInt(points[0].split("-")[0]),
-                    parseInt(points[0].split("-")[1]),
-                    parseInt(points[0].split("-")[2])
-                ),
-                y: [
-                    parseFloat(points[1]),
-                    parseFloat(points[2]),
-                    parseFloat(points[3]),
-                    parseFloat(points[4])
-                ]
-            });
-        }
-    }
-    chart.render();
+function switch_market(market){
+	CURRENT_MARKET = market;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-var trace1 = {
-  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], 
-  close: [116.019997, 116.610001, 117.910004, 118.989998, 119.110001, 119.75, 119.25, 119.040001, 120, 119.989998, 119.779999, 120, 120.080002, 119.970001, 121.879997, 121.940002, 121.949997, 121.629997, 121.349998, 128.75, 128.529999, 129.080002, 130.289993, 131.529999, 132.039993, 132.419998, 132.119995, 133.289993, 135.020004, 135.509995],   
-  high: [116.510002, 116.860001, 118.160004, 119.43, 119.379997, 119.93, 119.300003, 119.620003, 120.239998, 120.5, 120.089996, 120.449997, 120.809998, 120.099998, 122.099998, 122.440002, 122.349998, 121.629997, 129.389999, 130.490005, 129.389999, 129.190002, 130.5, 132.089996, 132.220001, 132.449997, 132.940002, 133.820007, 135.089996, 136.270004], 
-  low: [115.75, 115.809998, 116.470001, 117.940002, 118.300003, 118.599998, 118.209999, 118.809998, 118.220001, 119.709999, 119.370003, 119.730003, 119.769997, 119.5, 120.279999, 121.599998, 121.599998, 120.660004, 120.620003, 127.010002, 127.779999, 128.160004, 128.899994, 130.449997, 131.220001, 131.119995, 132.050003, 132.75, 133.25, 134.619995], 
-  open: [115.849998, 115.919998, 116.779999, 117.949997, 118.769997, 118.739998, 118.900002, 119.110001, 118.339996, 120, 119.400002, 120.449997, 120, 119.550003, 120.419998, 121.669998, 121.139999, 120.93, 128.150002, 127.029999, 127.980003, 128.309998, 129.130005, 130.539993, 131.350006, 131.649994, 132.460007, 133.080002, 133.470001, 135.520004], 
-  type: 'candlestick', 
-  xaxis: 'x', 
-  yaxis: 'y',
-  increasing: {line: {color: 'red'}},
-  decreasing: {line: {color: 'green'}},
-  line: {color: 'black'}  
-};
 
-var data = [trace1];
-
-var layout = {
-  dragmode: 'zoom', 
-  margin: {r: 10, t: 25, b: 40, l: 60}, 
-  showlegend: true, 
-  xaxis: {
-    autorange: true, 
-    domain: [0, 1], 
-    title: 'Minute',
-    type: 'Date',
-    rangeslider: {visible: false}
-  }, 
-  yaxis: {
-    autorange: true, 
-    domain: [0, 1], 
-    title: 'Price',
-    type: 'linear'
-  }
-};
-
-Plotly.plot('plotly-div', data, layout);
-
+$(document).ready( function () { 
 /**
 * Viewers
 */
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='DB_ListOrderBooks';
-            }}});
+            }},
+        "columnDefs":[
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:switch_market(\""+row[0]+"\");'>switch_market(\""+row[0]+"\")</a>"; return row[0];}}
+		]});
 setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
@@ -400,8 +297,8 @@ var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": {
             d.symbol=CURRENT_MARKET;
             }},
         "columnDefs":[
-	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Bid":"Ask")+"</a>"; return row[0];}}
-	]});
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Bid":"Ask")+"</a>"; return row[0];}}
+		]});
 setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
@@ -416,8 +313,8 @@ var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax"
             d.filters="";
             }},
         "columnDefs":[
-	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
-	]});
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
+		]});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
@@ -425,8 +322,8 @@ var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, 
             d.account_id=CURRENT_ACCOUNT;
             }},
         "columnDefs":[
-	{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[4]+","+row[0]+","+row[17]+","+row[23]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
-	]});
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[5]+","+row[0]+","+row[17]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
+		]});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
