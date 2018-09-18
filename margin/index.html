@@ -40,7 +40,6 @@
   <li><a data-toggle="tab" href="#Balances">Balances</a></li>
   <li><a data-toggle="tab" href="#Orders">Orders</a></li>
   <li><a data-toggle="tab" href="#Contracts">Contracts</a></li>
-  <li><a data-toggle="tab" href="#Trades">Trades</a></li>
 </ul>
 <div class="tab-content">
   <div id="OrderBooks" class="tab-pane fade in active">
@@ -54,9 +53,6 @@
   </div>
   <div id="Contracts" class="tab-pane fade">
     <table id="contracts" class="display" style="width:100%"> <thead> <tr> <th>contract_id</th><th>symbol</th><th>symbolpair</th><th>level</th><th>profit</th><th>st</th><th>bull</th><th>open_time</th><th>close_time</th><th>liqui_time</th><th>my_account</th><th>match_account</th><th>my_order</th><th>match_order</th><th>init_margin</th><th>added_margin</th><th>loan</th><th>cost</th><th>qty</th><th>qty_open</th><th>qty_closing</th><th>qty_closed</th><th>feerate</th><th>marginrate</th><th>margincall</th><th>liquilevel</th><th>leverage</th><th>match_contract</th></tr></thead></table>
-  </div>
-  <div id="Trades" class="tab-pane fade">
-    <table id="trades" class="display" style="width:100%"> <thead> <tr> <th>trade_id</th> <th>symbol</th> <th>trade_time</th> <th>cost</th><th>qty</th></tr> </thead> </table>
   </div>
 </div>
 
@@ -325,12 +321,6 @@ var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, 
 			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[5]+","+row[0]+","+row[17]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
 		]});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
-
-var trades=$('#trades').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
-    'data': function(d){d.token="secure";d.api='DB_GetTrades';
-            d.symbol=CURRENT_MARKET;
-            }}});
-setInterval( function () { trades.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 
 });
 </script>
