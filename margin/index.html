@@ -283,8 +283,26 @@ $(document).ready( function () {
 var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){ d.token="secure";d.api='DB_ListOrderBooks';
             }},
+		"columns": [
+            { "data": "symbol" },
+            { "data": "display" },
+            { "data": "symbolpair" },
+            { "data": "feerate" },
+            { "data": "marginrate" },
+            { "data": "margincall" },
+            { "data": "liquilevel" },
+            { "data": "liquitime" },
+            { "data": "total_qty" },
+            { "data": "total_cost" },
+            { "data": "last_price" },
+            { "data": "open_price" },
+            { "data": "high_price" },
+            { "data": "low_price" },
+            { "data": "latest_price" },
+            { "data": "trade_no" }
+        ],
         "columnDefs":[
-			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:switch_market(\""+row[0]+"\");'>switch_market(\""+row[0]+"\")</a>"; return row[0];}}
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:switch_market(\""+row["symbol"]+"\");'>switch_market(\""+row["symbol"]+"\")</a>"; return row[0];}}
 		]});
 setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
@@ -292,15 +310,32 @@ var depth=$('#depth').DataTable( { "searching": false,"paging": false, "ajax": {
     'data': function(d){d.token="secure";d.api='API_ListDepth';
             d.symbol=CURRENT_MARKET;
             }},
+		"columns": [
+            { "data": "buy" },
+            { "data": "price" },
+            { "data": "qty" },
+            { "data": "count" }
+        ],			
         "columnDefs":[
-			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row[0]+","+row[1]+");'>"+(row[0]?"Bid":"Ask")+"</a>"; return row[0];}}
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setprice("+row["buy"]+","+row["price"]+");'>"+(row["buy"]==1?"Bid":"Ask")+"</a>"; return row["buy"];}}
 		]});
 setInterval( function () { depth.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var balances=$('#balances').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
     'data': function(d){d.token="secure";d.api='API_GetBalance';
             d.account_id=CURRENT_ACCOUNT;
-            }}});
+            }},
+		"columns": [
+            { "data": "account_id" },
+            { "data": "coin" },
+            { "data": "balance" },
+            { "data": "freezed" },
+            { "data": "loan" },
+            { "data": "coin_address" }
+        ],				
+        "columnDefs":[
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:op("+row["account_id"]+");'>op("+row["account_id"]+")</a>"; return row["account_id"];}}
+		]});
 setInterval( function () { balances.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
 var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax": { 'url': '/margin/api.php', 'type': 'POST',
@@ -308,8 +343,29 @@ var orders=$('#orders').DataTable( { "searching": false, "paging": false, "ajax"
             d.account_id=CURRENT_ACCOUNT;
             d.filters="";
             }},
+		"columns": [
+            { "data": "order_id" },
+            { "data": "status" },
+            { "data": "buy" },
+            { "data": "aon" },
+            { "data": "ioc" },
+            { "data": "revokable" },
+            { "data": "onbook" },
+            { "data": "symbol" },
+            { "data": "symbolpair" },
+            { "data": "account_id" },
+            { "data": "place_time" },
+            { "data": "price" },
+            { "data": "stop_price" },
+            { "data": "quantity" },
+            { "data": "quantity_unfilled" },
+            { "data": "quantity_filled" },
+            { "data": "fill_cost" },
+            { "data": "leverage" },
+            { "data": "match_contract" }
+        ],				
         "columnDefs":[
-			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row[0]+");'>revoke("+row[0]+")</a>"; return row[0];}}
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:revoke("+row["order_id"]+");'>revoke("+row["order_id"]+")</a>"; return row["order_id"];}}
 		]});
 setInterval( function () { orders.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
@@ -317,8 +373,38 @@ var contracts=$('#contracts').DataTable( { "searching": false, "paging": false, 
     'data': function(d){d.token="secure";d.api='API_ListContracts';
             d.account_id=CURRENT_ACCOUNT;
             }},
+		"columns": [
+            { "data": "contract_id" },
+            { "data": "symbol" },
+            { "data": "symbolpair" },
+            { "data": "level" },
+            { "data": "profit" },
+            { "data": "st" },
+            { "data": "bull" },
+            { "data": "open_time" },
+            { "data": "close_time" },
+            { "data": "liqui_time" },
+            { "data": "my_account" },
+            { "data": "match_account" },
+            { "data": "my_order" },
+            { "data": "match_order" },
+            { "data": "init_margin" },
+            { "data": "added_margin" },
+            { "data": "loan" },
+            { "data": "cost" },
+            { "data": "qty" },
+            { "data": "qty_open" },
+            { "data": "qty_closing" },
+            { "data": "qty_closed" },
+            { "data": "feerate" },
+            { "data": "marginrate" },
+            { "data": "margincall" },
+            { "data": "liquilevel" },
+            { "data": "leverage" },
+            { "data": "match_contract" }
+        ],			
         "columnDefs":[
-			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row[5]+","+row[0]+","+row[17]+");'>close:"+row[0]+"</a><br>"+"<a href='"+row[0]+"'>[+-]margin:"+row[0]+"</a>"; return row[0];}}
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:setcloseform("+row["bull"]+","+row["contract_id"]+","+row["qty_open"]+");'>close:"+row["contract_id"]+"</a><br>"+"<a href='"+row["contract_id"]+"'>[+-]margin:"+row["contract_id"]+"</a>"; return row["contract_id"];}}
 		]});
 setInterval( function () { contracts.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
 

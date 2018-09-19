@@ -44,10 +44,6 @@ function DB_ListOrderBooks(){
 	return req("DB_ListOrderBooks", '[]');
 }
 
-function DB_GetTrades($symbol){
-	return req("DB_GetTrades", '["'.$symbol.'"]');
-}
-
 /**
 * Exported APIs
 */
@@ -98,8 +94,6 @@ function MainEntrance(){
 	$api=GetParam("api");
 	/*===*/if ($api == 'DB_ListOrderBooks'){
 		return DB_ListOrderBooks();
-	} else if ($api == 'DB_GetTrades'){
-		return DB_GetTrades(GetParam('symbol')); 
 	} else if ($api == 'API_ListDepth'){
 		return API_ListDepth(GetParam('symbol')); 
         } else if ($api == 'API_PlaceOrder' ){		
