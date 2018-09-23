@@ -303,7 +303,8 @@ var orderbooks=$('#orderbooks').DataTable( { "searching": false,"paging": false,
             { "data": "trade_no" }
         ],
         "columnDefs":[
-			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:switch_market(\""+row["symbol"]+"\");'>switch_market(\""+row["symbol"]+"\")</a>"; return row[0];}}
+			{"targets": 0,"data": null,"render": function(data, type, row){ if (type=='display') return "<a href='javascript:switch_market(\""+row["symbol"]+"\");'>switch_market(\""+row["symbol"]+"\")</a>"; return row["symbol"];}}
+			, {"targets": 8,"data": null,"render": function(data, type, row){ if (type=='display') return new Date(row['liquitime']*1000); return row['liquitime'];}}
 		]});
 setInterval( function () { orderbooks.ajax.reload( null, false ); /* user paging is not reset on reload*/ }, 5000 );
             
