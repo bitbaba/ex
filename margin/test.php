@@ -139,8 +139,22 @@ function MainEntrance(){
 }
 
 #echo MainEntrance();
-echo API_RemoveOrderBook('BTC/USDT-20x-0928');
-echo API_RenameOrderBook('BTC/USDT-20x-1005', 'BTC/USDT 20x Nweeks');
-echo API_CreateOrderBook('BTC/USDT-20x-0105', 'BTC/USDT', 'BTC/USDT-20x-Nweeks', 1500000000);
+#echo API_RemoveOrderBook('BTC/USDT-20x-0928');
+echo API_RenameOrderBook('BTC/USDT-20x-1012', 'BTC/USDT:20x:1weeks');
+echo API_RenameOrderBook('ETH/USDT-20x-1012', 'ETH/USDT:20x:1weeks');
+echo API_RenameOrderBook('LTC/USDT-20x-1012', 'LTC/USDT:20x:1weeks');
+
+echo API_RenameOrderBook('BTC/USDT-20x-1019', 'BTC/USDT:20x:2weeks');
+echo API_RenameOrderBook('ETH/USDT-20x-1019', 'ETH/USDT:20x:2weeks');
+echo API_RenameOrderBook('LTC/USDT-20x-1019', 'LTC/USDT:20x:2weeks');
+
+#echo API_CreateOrderBook('BTC/USDT-20x-1012', 'BTC/USDT', 'BTC/USDT-20x-1weeks', 1539360000);
+#echo API_CreateOrderBook('ETH/USDT-20x-1012', 'ETH/USDT', 'ETH/USDT-20x-1weeks', 1539360000);
+#echo API_CreateOrderBook('LTC/USDT-20x-1012', 'LTC/USDT', 'LTC/USDT-20x-1weeks', 1539360000);
+
+#echo API_CreateOrderBook('BTC/USDT-20x-1019', 'BTC/USDT', 'BTC/USDT-20x-2weeks', 1539360000+86400*7);
+#echo API_CreateOrderBook('ETH/USDT-20x-1019', 'ETH/USDT', 'ETH/USDT-20x-2weeks', 1539360000+86400*7);
+#echo API_CreateOrderBook('LTC/USDT-20x-1019', 'LTC/USDT', 'LTC/USDT-20x-2weeks', 1539360000+86400*7);
+
 echo DB_ListOrderBooks();
 ?>
